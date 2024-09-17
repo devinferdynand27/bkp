@@ -20,15 +20,14 @@
         $(document).ready(function() {
             $('#galeri').DataTable();
         });
-        
     </script>
-       <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
-       <script>
-           CKEDITOR.replace('ckeditor', {
-               filebrowserUploadUrl: "{{ route('upload', ['_token' => csrf_token()]) }}",
-               filebrowserUploadMethod: 'form'
-           });
-       </script>
+    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+    <script>
+        CKEDITOR.replace('ckeditor', {
+            filebrowserUploadUrl: "{{ route('upload', ['_token' => csrf_token()]) }}",
+            filebrowserUploadMethod: 'form'
+        });
+    </script>
     <script src="{{ asset('js/sweetalert2.js') }}"></script>
     <script src="{{ asset('js/delete.js') }}"></script>
 @endsection
@@ -47,6 +46,12 @@
 
     .form-check-label b {
         color: grey;
+    }
+
+    .selected-link-img {
+        width: 50px;
+        /* Adjust the size as needed */
+        height: auto;
     }
 </style>
 
@@ -93,7 +98,7 @@
                             placeholder="Masukan Nama Kegiatan">
                     </div>
                     <div class="form-group">
-                        <label for="">kategori kegiatan</label>
+                        <label for="">Kategori Kegiatan</label>
                         <select name="kkid" class="form-control" required>
                             @foreach ($kategori_kegiatan as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -104,7 +109,7 @@
                         <label for="">Tanggal Kegiatan</label>
                         <input type="datetime-local" name="waktu_kegiatan" required class="form-control">
                     </div>
-                    <input type="text" n id="checkedItemsInput" hidden name="lkid" value='[]'>
+                    <input type="text" id="checkedItemsInput" name="lkid" value='[]'>
                     <div class="form-group">
                         <label for="">Dokumentasi</label>
                         <input type="file" name="dokumentasi" required class="form-control" placeholder="Upload Image">
@@ -129,54 +134,90 @@
     </div>
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Pilih Link </h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Pilih Link</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @foreach ($link as $item)
-                        <span class="container"><b>{{ $item->name }}</b></span>
-                        <div class="input-group mb-3 ms-2 mt-2">
-                            <span class="input-group-text" id="basic-addon1">
-                                <input class="form-check-input" type="checkbox" onclick="check(this)"
-                                    data-id="{{ $item->id }}" id="flexCheckDefault{{ $loop->index }}">
-                            </span>
-                            <span class="input-group-text" id="basic-addon1">
-                                <img class="img-custom" style="width: 30px" src="{{ asset('icon/' . $item->icon) }}"
-                                    alt="Instagram Icon">
-                            </span>
-                            <input type="text" value="{{ $item->url }}" disabled class="form-control"
-                                id="instagramInput{{ $loop->index }}" placeholder="Username" aria-label="Username"
-                                aria-describedby="basic-addon1">
-                        </div>
-                    @endforeach
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Simpan</button>
-                     
-                    </div>
+                    <select name="data_lkid" id="data_lkid" class="form-select">
+                        @foreach ($link as $item)
+                            <option value="{{ $item->id }}" data-name="{{ $item->name }}"
+                                data-icon="{{ asset('icon/' . $item->icon) }}">
+                                <img src="{{ asset('icon/' . $item->icon) }}" alt="">
+                                {{ $item->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <table id="selectedLinksTable" class="table mt-3">
+                        <thead>
+                            <tr>
+                                <th>Gambar</th>
+                                <th>Link</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Selected links will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
     </div>
-        <script>
-            let lkid = [];
+    <script>
+        let lkid = [];
 
-            function check(checkboxElement) {
-                const id = checkboxElement.getAttribute('data-id');
+        function updateSelectedLinks() {
+            const selectElement = document.getElementById('data_lkid');
+            const selectedValue = selectElement.value;
+            const selectedName = selectElement.options[selectElement.selectedIndex].getAttribute('data-name');
+            const selectedIcon = selectElement.options[selectElement.selectedIndex].getAttribute('data-icon');
 
-                if (checkboxElement.checked) {
-                    // Add the ID to the array if checked
-                    if (!lkid.includes(id)) {
-                        lkid.push(id);
-                    }
-                } else {
-                    // Remove the ID from the array if unchecked
-                    lkid = lkid.filter(itemId => itemId !== id);
-                }
-
-                document.getElementById('checkedItemsInput').value = JSON.stringify(lkid);
+            if (selectedValue && !lkid.includes(selectedValue)) {
+                lkid.push(selectedValue);
+                addLinkToTable(selectedValue, selectedName, selectedIcon);
+                updateHiddenInput();
             }
-        </script>
-    @endsection
+        }
+
+        function addLinkToTable(id, name, icon) {
+            const tableBody = document.getElementById('selectedLinksTable').getElementsByTagName('tbody')[0];
+            const row = tableBody.insertRow();
+            const imgCell = row.insertCell(0);
+            const linkCell = row.insertCell(1);
+            const actionCell = row.insertCell(2);
+
+            imgCell.innerHTML = `<img src="${icon}" class="selected-link-img" alt="">`;
+            linkCell.textContent = name;
+            actionCell.innerHTML = '<button type="button" class="btn btn-danger btn-sm" onclick="removeLink(this, \'' + id +
+                '\')">Hapus</button>';
+        }
+
+        function removeLink(button, id) {
+            // Remove link from table
+            const row = button.closest('tr');
+            row.remove();
+
+            // Remove ID from array
+            lkid = lkid.filter(itemId => itemId !== id);
+
+            // Update hidden input value
+            updateHiddenInput();
+        }
+
+        function updateHiddenInput() {
+            document.getElementById('checkedItemsInput').value = JSON.stringify(lkid);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('#data_lkid').forEach(select => {
+                select.addEventListener('change', updateSelectedLinks);
+            });
+        });
+    </script>
+@endsection

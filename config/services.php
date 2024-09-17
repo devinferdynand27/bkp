@@ -19,6 +19,11 @@ return [
         'secret' => env('MAILGUN_SECRET'),
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
     ],
+    'recaptcha' => [
+    'sitekey' => env('NOCAPTCHA_SITEKEY'),
+    'secret' => env('NOCAPTCHA_SECRET'),
+],
+
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),

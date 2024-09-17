@@ -169,7 +169,7 @@
         }
 
         .gradient-btn {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            background: linear-gradient(#F7CB4F, #374774);
             border: none;
             color: white;
             padding: 10px 20px;
@@ -183,7 +183,7 @@
         }
 
         .gradient-btn:hover {
-            background: linear-gradient(45deg, #bc1888 0%, #cc2366 25%, #dc2743 50%, #e6683c 75%, #f09433 100%);
+            background: linear-gradient(#F7CB4F, #374774);
         }
 
         .whatsapp-float {
@@ -344,13 +344,13 @@
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
             <h2>Kegiatan!</h2>
-            <p>{{$iklan->nama_kegiatan}}</p>
-            <img src="{{ asset('dokumentasi_kegiatan/' . $iklan->dokumentasi) }}" style="height: 200px; object-fit: cover"
-                alt="Advertisement" class="img-fluid" style="border-radius: 10px; width: 100%;">
+            <p>{{ $iklan->nama_kegiatan }}</p>
+            <img src="{{ asset('dokumentasi_kegiatan/' . $iklan->dokumentasi) }}" alt="Advertisement" class="img-fluid"
+                style="border-radius: 10px; width: 100%;">
             <div style="margin-top: 20px;">
                 <button class="btn btn-secondary" style="width: 45%" id="closeModalFooter">Close</button>
-                <a href="/kegiatan/{{ $iklan->nama_kegiatan }}/{{ $iklan->id }}" class="btn btn-primary"
-                    style="width: 45%">Learn More</a>
+                <a href="/kegiatan/{{ $iklan->nama_kegiatan }}/{{ $iklan->id }}" class="btn text-white"
+                    style="width: 45%; background: #374774">Learn More</a>
 
 
             </div>
@@ -451,26 +451,30 @@
                                             <video controls style="width: 100%; height: 300px;">
                                                 <source src="{{ $post['media_url'] }}" type="video/mp4">
                                             </video>
-                                            @elseif ($post['media_type'] === 'CAROUSEL_ALBUM')
+                                        @elseif ($post['media_type'] === 'CAROUSEL_ALBUM')
                                             <div id="carousel-{{ $post['id'] }}" class="carousel slide">
                                                 <div class="carousel-inner">
                                                     @foreach ($post['carousel_media'] as $index => $media)
                                                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                                                             @if ($media['media_type'] === 'IMAGE')
                                                                 <img src="{{ $media['media_url'] }}" class="d-block w-100"
-                                                                     style="border-radius: 10px; height: 300px; object-fit: cover;">
+                                                                    style="border-radius: 10px; height: 300px; object-fit: cover;">
                                                             @elseif ($media['media_type'] === 'VIDEO')
-                                                                <video controls class="d-block w-100" style="border-radius: 10px; height: 300px;">
-                                                                    <source src="{{ $media['media_url'] }}" type="video/mp4">
+                                                                <video controls class="d-block w-100"
+                                                                    style="border-radius: 10px; height: 300px;">
+                                                                    <source src="{{ $media['media_url'] }}"
+                                                                        type="video/mp4">
                                                                 </video>
                                                             @endif
                                                         </div>
                                                     @endforeach
-                                                    <a class="carousel-control-prev" href="#carousel-{{ $post['id'] }}" role="button" data-slide="prev">
+                                                    <a class="carousel-control-prev" href="#carousel-{{ $post['id'] }}"
+                                                        role="button" data-slide="prev">
                                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                         <span class="sr-only">Previous</span>
                                                     </a>
-                                                    <a class="carousel-control-next" href="#carousel-{{ $post['id'] }}" role="button" data-slide="next">
+                                                    <a class="carousel-control-next" href="#carousel-{{ $post['id'] }}"
+                                                        role="button" data-slide="next">
                                                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                                         <span class="sr-only">Next</span>
                                                     </a>
@@ -490,14 +494,14 @@
                         @endforeach
 
                     </div>
-                    @if (count($posts) > 3)
-                        <a href="/instagram" class="btn btn-primary gradient-btn floar-right mt-5" style="width: 150px">
-                            Show More</a>
-                        <a href="https://www.instagram.com/{{$instagram->name}}/" target="_blank"
-                            class="btn btn-primary gradient-btn floar-right mt-5" style="width: 200px">
-                            Show Instagram</a>
-                    @endif
-                   
+
+                    <a href="/instagram" class="btn btn-primary gradient-btn floar-right mt-5" style="width: 150px">
+                        Show More</a>
+                    <a href="https://www.instagram.com/{{ $instagram->name }}/" target="_blank"
+                        class="btn btn-primary gradient-btn floar-right mt-5" style="width: 200px">
+                        Show Instagram</a>
+
+
                 </div>
             </div>
         </div>
@@ -523,13 +527,13 @@
                 padding: 10px;
             }
         </style>
-       
-      <div class="container">
-        @include('components.kalender-besar')
-      </div>
-      <div class="container">
-        @include('components.text')
-      </div>
+
+        <div class="container">
+            @include('components.kalender-besar')
+        </div>
+        <div class="container">
+            {{-- @include('components.text') --}}
+        </div>
 
 
 

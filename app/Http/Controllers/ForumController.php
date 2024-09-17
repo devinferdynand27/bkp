@@ -7,6 +7,7 @@ use App\Rules\NoProfanity;
 use Illuminate\Http\Request;
 use App\Models\SubForum;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ForumController extends Controller
 {
@@ -51,6 +52,78 @@ class ForumController extends Controller
      }
      
 
+     public function math()
+    {
+        return captcha_img('math');
+    }
+
+    public function reply(Request $request)
+    {
+        // Validate request data
+        $validator = Validator::make($request->all(), [
+            'kepada' => ['required'],
+            'nama' => ['required'],
+            'email' => ['required', 'email'],
+            'deskripsi' => ['required'],
+            'id_forum' => ['required'],
+            
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+    
+        // Validate CAPTCHA separately
+        $captchaValidator = Validator::make($request->all(), [
+            'captcha' => 'required|captcha',
+        ]);
+    
+        if ($captchaValidator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Code Captcha Salah.'
+            ], 422);
+        }
+    
+        // Create an instance of the NoProfanity rule
+        $noProfanity = new NoProfanity();
+    
+        $fieldsWithProfanity = [];
+        if (!$noProfanity->passes('email', $request->email)) {
+            $fieldsWithProfanity[] = 'email';
+        }
+        if (!$noProfanity->passes('nama', $request->nama)) {
+            $fieldsWithProfanity[] = 'nama';
+        }
+        if (!$noProfanity->passes('deskripsi', $request->deskripsi)) {
+            $fieldsWithProfanity[] = 'deskripsi';
+        }
+    
+        if (!empty($fieldsWithProfanity)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Atribut berisi bahasa yang tidak pantas.'
+            ], 400);
+        }
+    
+        // Save the forum comment
+        $forum = new SubForum();
+        $forum->kepada = $request->kepada;
+        $forum->name = $request->nama;
+        $forum->email = $request->email;
+        $forum->forum_id = $request->id_forum;
+        $forum->deskripsi = $request->deskripsi;
+        $forum->save();
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Comment successfully posted.'
+        ]);
+    }
+
     public function comment_post(Request $request)
     {
         $request->validate([
@@ -58,7 +131,17 @@ class ForumController extends Controller
             'subject' => ['required'],
             'email' => ['required', 'email'],
             'comment' => ['required'],
+            'captcha' => 'required|captcha',
         ]);
+        $validator = Validator::make($request->all(), [
+            'captcha' => 'required|captcha',
+            // Validasi lainnya
+        ]);
+
+        if ($validator->fails()) {
+            toastr()->warning('warning', 'Code Captcha Salah. ');
+        return redirect()->back();
+        }
 
         // Create an instance of the NoProfanity rule
         $noProfanity = new NoProfanity();
@@ -91,7 +174,7 @@ class ForumController extends Controller
         $forum->name = $request->name;
         $forum->subject = $request->subject;
         $forum->email = $request->email;
-        $forum->publish = '1';
+        $forum->publish = '0';
         $forum->comment = $request->comment;
         $forum->close_the_forum = 'false';
         $forum->save();

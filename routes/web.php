@@ -71,6 +71,7 @@ use App\Models\KalenderKegiatan;
 use App\Models\KategoriKegiatan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +103,8 @@ Route::get('/instagram-create', [InstagramController::class, 'create']);
 
 Route::get('forum', [ForumController::class, 'forum_index_member'])->name('forum.filter');;
 Route::post('comment-post', [ForumController::class, 'comment_post']);
+
+Route::get('/captcha/math', [ForumController::class,'math']);
 
 
 Route::get('/tentang-kami', [TbTentangKamiController::class, 'tentangIndex']);
@@ -185,11 +188,25 @@ Route::post('/master-admin/login/proses', [
     'authenticate',
 ]);
 
-Route::get('/api/calendar-events/{date}', [KalenderKegiatanController::class, 'getEventDetails']);
+Route::post('/filter-events', function (Request $request) {
+    $categoryId = $request->input('category_id');
+
+    $kalenderKegiatan = KalenderKegiatan::where('kkid', $categoryId)->get();
+
+    $formattedEvents = $kalenderKegiatan->map(function ($item) {
+        return ['date' => \Carbon\Carbon::parse($item->waktu_kegiatan)->format('Y-m-d')];
+    });
+
+    return response()->json(['events' => $formattedEvents]);
+});
+
+
+Route::post('/event-details', [KalenderKegiatanController::class, 'getEventDetails']);
+
 
 
 // routes/web.php
-Route::post('/forum-reply', [SubForumController::class, 'reply'])->name('forum.reply');
+Route::post('/forum-reply', [ForumController::class, 'reply'])->name('forum.reply');
 Route::get('/forum/sub_forum/{id}', [SubForumController::class, 'index']);
 
 
@@ -234,6 +251,9 @@ Route::group(
 
         Route::get('/menu/atas/{id}', [TbMenuController::class, 'atas'])->name('menu.atas');
 Route::get('/menu/bawah/{id}', [TbMenuController::class, 'bawah'])->name('menu.bawah');
+
+Route::get('/submenu/atas/{id}', [TbSubMenuController::class, 'atas']);
+Route::get('/submenu/bawah/{id}', [TbSubMenuController::class, 'bawah'])->name('menu.bawah');
 
 
         Route::get('forum', [ForumController::class,'index_master_admin']);

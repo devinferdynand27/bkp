@@ -49,17 +49,19 @@
                                                 <select name="kkid" id="kkid" class="form-select">
                                                     <option value="">-- pilih kategori --</option>
                                                     @foreach ($kategori as $item)
-                                                        <option value="{{ $item->id }}" {{ $item->id == $selected_kategori ? 'selected' : '' }}>
+                                                        <option value="{{ $item->id }}"
+                                                            {{ $item->id == $selected_kategori ? 'selected' : '' }}>
                                                             {{ $item->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                                 &nbsp;
+                                                &nbsp;
                                                 <!-- Year Dropdown -->
                                                 <select name="year" class="form-select" style="width: 100%">
                                                     <option value="">-- pilih tahun --</option>
                                                     @foreach ($year_all as $item)
-                                                        <option value="{{ $item }}" {{ $item == $selected_year ? 'selected' : '' }}>
+                                                        <option value="{{ $item }}"
+                                                            {{ $item == $selected_year ? 'selected' : '' }}>
                                                             {{ $item }}
                                                         </option>
                                                     @endforeach
@@ -67,7 +69,8 @@
                                             </div>
                                         </td>
                                         <td></td>
-                                        <td><button type="submit" class="btn btn-primary btn-sm">Cari</button></td>
+                                        <td><button type="submit" class="btn text-white btn-sm"
+                                                style="background: #374774">Cari</button></td>
                                     </tr>
                                 </table>
                             </form>
@@ -109,14 +112,17 @@
                                     @endphp
                                     <tr>
                                         <td>
-                                            <div style="cursor: pointer" onclick="modal_show({{ $item->id }}, 'tanggal')">
+                                            <div style="cursor: pointer"
+                                                onclick="modal_show({{ $item->id }}, 'tanggal')">
                                                 {{ $item->nama_kegiatan }}
                                             </div>
                                         </td>
                                         @for ($i = 1; $i <= 12; $i++)
                                             <td class="text-center">
                                                 @if ($i == $bulan)
-                                                    <div class="select-date btn btn-warning btn-sm" style="cursor: pointer" onclick="modal_show({{ $item->id }}, 'tanggal')">
+                                                    <div class="select-date btn text-white btn-sm"
+                                                        style="cursor: pointer;background:#F7CB4F"
+                                                        onclick="modal_show({{ $item->id }}, 'tanggal')">
                                                         {{ $tanggal }}
                                                     </div>
                                                 @endif
@@ -125,13 +131,16 @@
                                         <td>{{ \Carbon\Carbon::parse($item->waktu_kegiatan)->format('Y-m-d') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->waktu_kegiatan)->format('H:i') }}</td>
                                         <td>
-                                            <button type="button" onclick="modal_show({{ $item->id }}, 'link'); return false;" class="btn btn-primary btn-sm">
+                                            <button type="button"
+                                                onclick="modal_show({{ $item->id }}, 'link'); return false;"
+                                                class="btn text-white btn-sm" style="background: #374774">
                                                 Link
                                                 <i class="bi bi-link-45deg"></i>
                                             </button>
                                         </td>
                                         <td>
-                                            <div class="{{ $item->status == 0 ? 'btn btn-secondary btn-sm' : 'btn btn-primary btn-sm' }}">
+                                            <div
+                                                class="{{ $item->status == 0 ? 'btn btn-secondary btn-sm' : 'btn btn-primary btn-sm' }}">
                                                 {{ $item->status == 1 ? 'Sudah Terlaksana' : 'Belum Terlaksana' }}
                                             </div>
                                         </td>
@@ -158,19 +167,23 @@
         <div id="modal{{ $item->id }}_tanggal" class="custom-modal">
             <div class="custom-modal-content shadow">
                 <span class="close-modal">&times;</span>
+
                 <h6>{{ $item->nama_kegiatan }}</h6>
-                <img style="width: 100%" src="{{ asset('dokumentasi_kegiatan/' . $item->dokumentasi) }}" alt=""><br><b></b><br>
-                <span style="color: gray" class="mt-2">{{ $item->waktu_kegiatan }}</span>
-                <p class="mt-3">{{ $item->deskripsi }}</p>
                 <div style="display: flex;">
                     @foreach ($link as $linkItem)
-                        <a href="{{ $linkItem->url }}" target="_blank" class="btn btn-sm text-white" style="background: {{ $linkItem->color }}">
+                        <a href="{{ $linkItem->url }}" target="_blank" class="btn btn-sm text-white"
+                            style="background: {{ $linkItem->color }}">
                             <img style="width: 20px" src="{{ asset('icon/' . $linkItem->icon) }}" alt="">
                             &nbsp;
                             {{ $linkItem->name }}
                         </a> &nbsp;
                     @endforeach
                 </div>
+                <img style="width: 100%" src="{{ asset('dokumentasi_kegiatan/' . $item->dokumentasi) }}"
+                    alt=""><br><b></b><br>
+                <span style="color: gray" class="mt-2">{{ $item->waktu_kegiatan }}</span>
+                <p class="mt-3">{{ $item->deskripsi }}</p>
+
             </div>
         </div>
 
@@ -179,13 +192,16 @@
             <div class="custom-modal-content shadow">
                 <span class="close-modal">&times;</span>
                 <h6>{{ $item->nama_kegiatan }}</h6>
-                <img style="width: 100%" src="{{ asset('dokumentasi_kegiatan/' . $item->dokumentasi) }}" alt=""><br><b></b><br>
+                <img style="width: 100%" src="{{ asset('dokumentasi_kegiatan/' . $item->dokumentasi) }}"
+                    alt=""><br><b></b><br>
                 <span style="color: gray" class="mt-2">{{ $item->waktu_kegiatan }}</span>
                 <div id="link-container{{ $item->id }}" style="margin-top: 20px;">
                     @foreach ($link as $linkItem)
                         <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                            <input type="text" value="{{ $linkItem->url }}" readonly class="form-control" id="linkInput{{ $linkItem->id }}" style="flex: 1; margin-right: 10px;">
-                            <button class="btn btn-primary btn-sm copy-btn" data-clipboard-target="#linkInput{{ $linkItem->id }}">
+                            <input type="text" value="{{ $linkItem->url }}" readonly class="form-control"
+                                id="linkInput{{ $linkItem->id }}" style="flex: 1; margin-right: 10px;">
+                            <button class="btn btn-primary btn-sm copy-btn"
+                                data-clipboard-target="#linkInput{{ $linkItem->id }}">
                                 Copy
                             </button>
                         </div>

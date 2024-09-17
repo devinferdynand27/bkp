@@ -7,7 +7,7 @@
         <div class="container mt-5">
             <div class="d-flex justify-content-center mb-4">
                 <button class="btn btn-primary border-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                    style="background: rgb(247, 161, 2)">Apa yang Anda Pikirkan?</button>
+                    style="background: #F7CB4F">Apa yang Anda Pikirkan?</button>
             </div>
             <div class="container mt-5">
                 <form id="filter-form" method="GET" action="{{ route('forum.filter') }}">
@@ -39,7 +39,8 @@
 
                             </div>
                             <div class="col-md-2 ">
-                                <button type="submit" style="width: 100%" class="btn btn-primary">Search</button>
+                                <button type="submit" style="width: 100%;background: #374774"
+                                    class="btn text-white">Search</button>
                             </div>
                         </div>
                     </div>
@@ -75,8 +76,8 @@
                                                 </button> &nbsp;&nbsp;
                                             @endif
 
-                                            <a
-                                                href="/forum/sub_forum/{{ $item->id }}"class="btn btn-primary btn-sm position-relative">
+                                            <a href="/forum/sub_forum/{{ $item->id }}"class="btn  text-white btn-sm position-relative"
+                                                style="background: #374774">
                                                 Lihat Forum
                                                 <span
                                                     class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -98,13 +99,13 @@
                                                 <div class="row mt-2">
                                                     <div class="col-md-6">
                                                         <label for="" class="mb-2"><b>Nama</b></label>
-                                                        <input type="text" placeholder="masukan nama"
+                                                        <input type="text" required placeholder="masukan nama"
                                                             class="form-control" name="input-nama-{{ $item->id }}"
                                                             id="nama-{{ $item->id }}">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="" class="mb-2"><b>Masukan Email</b></label>
-                                                        <input type="text" class="form-control"
+                                                        <input type="email" required class="form-control"
                                                             placeholder="masukan email"
                                                             name="input-email-{{ $item->id }}"
                                                             id="email-{{ $item->id }}">
@@ -112,10 +113,19 @@
                                                 </div>
                                                 <div class="form-group mt-2">
                                                     <label for="" class="mb-2"><b>Masukan Deskripsi</b></label>
-                                                    <input type="text" class="form-control"
+                                                    <input type="text" required class="form-control"
                                                         placeholder="Masukan deskripsi"
                                                         name="input-deskripsi-{{ $item->id }}"
                                                         id="deskripsi-{{ $item->id }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="captcha">CAPTCHA:</label>
+                                                    <img src="{{ url('/captcha/math') }}" alt="CAPTCHA">
+                                                    <input type="text" name="captcha" id="chapcha_balas"
+                                                        class="form-control" required>
+                                                    @if ($errors->has('captcha'))
+                                                        <span class="text-danger">{{ $errors->first('captcha') }}</span>
+                                                    @endif
                                                 </div>
                                                 <button class="btn btn-primary mt-3 float-end"
                                                     onclick="kirim('{{ $item->id }}', '{{ $item->name }}')">Kirim</button>
@@ -189,6 +199,14 @@
                                 <label for=""><b>Deskripsi</b></label>
                                 <textarea required placeholder="deskripsi" name="comment" class="form-control mt-2"></textarea>
                             </div>
+                            <div class="form-group">
+                                <label for="captcha">CAPTCHA:</label>
+                                <img src="{{ url('/captcha/math') }}" alt="CAPTCHA">
+                                <input type="text" name="captcha" id="captcha" class="form-control" required>
+                                @if ($errors->has('captcha'))
+                                    <span class="text-danger">{{ $errors->first('captcha') }}</span>
+                                @endif
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -235,6 +253,7 @@
             var namaValue = document.getElementById('nama-' + id).value;
             var emailValue = document.getElementById('email-' + id).value;
             var deskripsiValue = document.getElementById('deskripsi-' + id).value;
+            var captchaValue = document.getElementById('chapcha_balas').value; // Mengambil nilai CAPTCHA
 
             // Kirim data menggunakan AJAX
             $.ajax({
@@ -246,6 +265,7 @@
                     kepada: kepadaValue,
                     nama: namaValue,
                     email: emailValue,
+                    captcha: captchaValue, // Mengirimkan nilai CAPTCHA
                     deskripsi: deskripsiValue
                 },
                 success: function(response) {
@@ -254,7 +274,6 @@
                         formToHide.style.display = 'none';
                     }
 
-                    // Optionally hide the response form if it was open
                     var balasanForm = document.getElementById('balasan-' + id);
                     if (balasanForm) {
                         balasanForm.style.display = 'none';
@@ -264,7 +283,21 @@
                     location.reload();
                 },
                 error: function(xhr, status, error) {
-                    alert('Terjadi kesalahan saat menambahkan data');
+                    var response = xhr.responseJSON;
+                    var errorMessages = '';
+
+                    // Handle validation errors
+                    if (response.errors) {
+                        $.each(response.errors, function(field, messages) {
+                            errorMessages += messages.join(' ') + '\n';
+                        });
+                    }
+
+                    if (errorMessages === '') {
+                        errorMessages = 'Terjadi kesalahan saat menambahkan data';
+                    }
+
+                    alert(errorMessages);
                     console.error(xhr.responseText);
                 }
             });

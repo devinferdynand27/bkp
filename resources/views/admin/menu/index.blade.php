@@ -2,11 +2,13 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('DataTables/datatables.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css">
 @endsection
 
 @section('js')
     <script src="{{ asset('assets/admin/assets/js/plugin/datatables/datatables.min.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             $('#menu').DataTable();
@@ -122,12 +124,21 @@
                                         </form>
                                     </td>
                                     <td>
-                                         <a href="/master-admin/menu/atas/{{$item->id}}" class="btn btn-info btn-sm">Atas</a>
-                                        
-                                         <a href="/master-admin/menu/bawah/{{$item->id}}" class="btn btn-warning btn-sm">Bawah</a>
+                                        @if ($item->urutan != $minUrutan)
+                                            <!-- Jika urutan bukan yang terkecil -->
+                                            <a href="/master-admin/menu/atas/{{ $item->id }}"
+                                                class="btn btn-info btn-sm"><i class="bi bi-arrow-up"></i></a>
+                                        @endif
+
+                                        @if ($item->urutan != $lastItem->urutan)
+                                            <!-- Jika urutan bukan yang terakhir -->
+                                            <a href="/master-admin/menu/bawah/{{ $item->id }}"
+                                                class="btn btn-warning btn-sm"><i class="bi bi-arrow-down"></i></a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
+
                         </tbody>
                     </table>
                 </div>

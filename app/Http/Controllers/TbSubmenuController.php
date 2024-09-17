@@ -21,14 +21,22 @@ class TbSubmenuController extends Controller
         $submenu = Tb_submenu::orderBy('urutan', 'asc')
             ->where('id_menu', $tb_menu->id)
             ->get();
+        $lastItem = $submenu->last();
+        
+        // Dapatkan urutan terkecil dan terbesar untuk submenu tertentu
+        $minUrutan = Tb_submenu::where('id_menu', $tb_menu->id)->min('urutan');
+        $maxUrutan = Tb_submenu::where('id_menu', $tb_menu->id)->max('urutan');
+        
         $submenuCount = Tb_submenu::where('id_menu', $tb_menu->id)->count();
         $konten = Tb_konten::all();
         $menu = Tb_menu::find($tb_menu->id);
+        
         return view(
             'admin.submenu.index',
-            compact('submenu', 'submenuCount', 'konten', 'menu')
+            compact('submenu', 'submenuCount', 'konten', 'menu', 'minUrutan', 'maxUrutan')
         );
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -175,49 +183,56 @@ class TbSubmenuController extends Controller
         return redirect('/master-admin/menu/' . $tb_menu->slug . '/submenu');
     }
 
-    public function atas(Tb_menu $tb_menu, $id)
+    public function atas($id)
     {
-        $submenu = Tb_submenu::find($id);
-        $now = $submenu->urutan - 1;
-        $submenuAtas = Tb_submenu::where('id_menu', $tb_menu->id)
-            ->where('urutan', $now)
-            ->get();
-        foreach ($submenuAtas as $submenuatas) {
-        }
-        //ganti submenu atas
-        $gsubmenuAtas = Tb_submenu::find($submenuatas->id);
-        $gsubmenuAtas->urutan = $submenu->urutan;
-        $gsubmenuAtas->save();
+        $item = Tb_submenu::find($id);
 
-        //ganti submenu sekarang
-        $submenuNow = Tb_submenu::find($id);
-        $submenuNow->urutan = $submenuatas->urutan;
-        $submenuNow->save();
-        // $submenu->urutan = '3';
-        // $submenu->save();
-        session()->put('success', 'Data Sudah di perbarui');
-        return redirect('/master-admin/menu/' . $tb_menu->slug . '/submenu');
+    
+        if (!$item) {
+            return redirect()->back()->with('error', 'Item not found.');
+        }
+    
+        // Get the item above this one
+        $previousItem = Tb_submenu::where('urutan', '<', $item->urutan)
+                               ->orderBy('urutan', 'desc')
+                               ->first();
+    
+        if ($previousItem) {
+            // Swap the order values
+            $tempOrder = $item->urutan;
+            $item->urutan = $previousItem->urutan;
+            $previousItem->urutan = $tempOrder;
+    
+            $item->save();
+            $previousItem->save();
+        }
+    
+        return redirect()->back()->with('success', 'Item moved up.');
     }
-
-    public function bawah(Tb_menu $tb_menu, $id)
+    
+    public function bawah($id)
     {
-        $submenu = Tb_submenu::find($id);
-        $now = $submenu->urutan + 1;
-        $submenuAtas = Tb_submenu::where('id_menu', $tb_menu->id)
-            ->where('urutan', $now)
-            ->get();
-        foreach ($submenuAtas as $submenuatas) {
+        $item = Tb_submenu::find($id);
+    
+        if (!$item) {
+            return redirect()->back()->with('error', 'Item not found.');
         }
-        //ganti submenu atas
-        $gsubmenuAtas = Tb_submenu::find($submenuatas->id);
-        $gsubmenuAtas->urutan = $submenu->urutan;
-        $gsubmenuAtas->save();
-
-        //ganti submenu sekarang
-        $submenuNow = Tb_submenu::find($id);
-        $submenuNow->urutan = $submenuatas->urutan;
-        $submenuNow->save();
-        session()->put('success', 'Data Sudah di perbarui');
-        return redirect('/master-admin/menu/' . $tb_menu->slug . '/submenu');
+    
+        // Get the item below this one
+        $nextItem = Tb_submenu::where('urutan', '>', $item->urutan)
+                           ->orderBy('urutan', 'asc')
+                           ->first();
+    
+        if ($nextItem) {
+            // Swap the order values
+            $tempOrder = $item->urutan;
+            $item->urutan = $nextItem->urutan;
+            $nextItem->urutan = $tempOrder;
+    
+            $item->save();
+            $nextItem->save();
+        }
+    
+        return redirect()->back()->with('success', 'Item moved down.');
     }
 }

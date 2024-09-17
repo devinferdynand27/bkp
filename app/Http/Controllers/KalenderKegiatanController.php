@@ -39,30 +39,9 @@ class KalenderKegiatanController extends Controller
         return view('admin.kalender_kegiatan.index', compact('kegiatan'));
     }
 
-    public function getEvents($date, Request $request)
-    {
-        $category = $request->input('category');
-        $page = $request->input('page', 1);
+
+
     
-        $query = KalenderKegiatan::whereDate('waktu_kegiatan', $date);
-    
-        if ($category) {
-            $query->where('kategori_id', $category);
-        }
-    
-        $events = $query->paginate(10, ['*'], 'page', $page);
-    
-        return response()->json([
-            'content' => $events->items(),
-            'links' => $events->links()->elements[0],
-            'pagination' => [
-                'previous' => $events->previousPageUrl(),
-                'next' => $events->nextPageUrl(),
-                'current' => $events->currentPage(),
-                'last' => $events->lastPage(),
-            ],
-        ]);
-    }
     
 
 
@@ -77,6 +56,23 @@ class KalenderKegiatanController extends Controller
         $link = LinkKegiatan::orderBy('created_at', 'asc')->get();
         $kategori_kegiatan = KategoriKegiatan::orderBy('created_at', 'asc')->get();
         return view('admin.kalender_kegiatan.create', compact('kategori_kegiatan', 'link'));
+    }
+
+
+    public function getEventDetails(Request $request)
+    {
+        $date = $request->input('date');
+        $categoryId = $request->input('category_id');
+
+        $events = KalenderKegiatan::whereDate('waktu_kegiatan', $date)
+            ->where('kkid', $categoryId)
+            ->get(['nama_kegiatan', 'deskripsi', 'dokumentasi']);
+
+        return response()->json([
+            'events' => $events,
+            'totalPages' => 1, // Set this according to your pagination logic
+            'currentPage' => 1 // Set this according to your pagination logic
+        ]);
     }
 
     /**

@@ -124,24 +124,33 @@
                                     </option>
                                     <option value="Galeri" {{ $halaman->atas_kiri == 'Galeri' ? 'selected' : '' }}>Galeri
                                     </option>
-                                    <option value="Text" {{ $halaman->atas_kiri == 'Text' ? 'selected' : '' }}>Text
-                                    </option>
                                     @foreach ($text as $item)
                                         <option value="{{ $item->id }},text"
                                             {{ $halaman->atas_kiri == $item->id . ',text' ? 'selected' : '' }}>
                                             text | {{ $item->judul }}
                                         </option>
                                     @endforeach
+                                    <option value="Kalender" {{ $halaman->atas_kiri == 'Kalender' ? 'selected' : '' }}>
+                                        Kalender
+                                    </option>
                                     <option value="Kontak" {{ $halaman->atas_kiri == 'Kontak' ? 'selected' : '' }}>
                                         Kontak
                                     </option>
-                                    <option value="Kalender Widget"
-                                        {{ $halaman->atas_kiri == 'Kalender Widget' ? 'selected' : '' }}>
-                                        Kalender Widget
-                                    </option>
-                                    {{-- <option value="Artikel" {{ $halaman->atas_kiri == 'Artikel' ? 'selected' : '' }}>
+                                    @foreach ($kategoriKontenEbook as $dataKategoriKontenEbook)
+                                        <option value="{{ $dataKategoriKontenEbook->id }},ebook"
+                                            {{ $halaman->atas_kiri == $dataKategoriKontenEbook->id . ',ebook' ? 'selected' : '' }}>
+                                            E-book | {{ $dataKategoriKontenEbook->nama }}
+                                        </option>
+                                    @endforeach
+                                    @foreach ($kategoriKonten as $dataKategoriKonten)
+                                        <option value="{{ $dataKategoriKonten->id }},konten"
+                                            {{ $halaman->atas_kiri == $dataKategoriKonten->id . ',konten' ? 'selected' : '' }}>
+                                            Konten | {{ $dataKategoriKonten->nama }}
+                                        </option>
+                                    @endforeach
+                                    <option value="Artikel" {{ $halaman->atas_kiri == 'Artikel' ? 'selected' : '' }}>
                                         Artikel
-                                    </option> --}}
+                                    </option>
 
                                 </select>
                                 @error('atas_kiri')
@@ -189,9 +198,9 @@
                                             Konten | {{ $dataKategoriKonten->nama }}
                                         </option>
                                     @endforeach
-                                    {{-- <option value="Artikel" {{ $halaman->atas_tengah == 'Artikel' ? 'selected' : '' }}>
+                                    <option value="Artikel" {{ $halaman->atas_tengah == 'Artikel' ? 'selected' : '' }}>
                                         Artikel
-                                    </option> --}}
+                                    </option>
 
                                 </select>
                                 @error('atas_tengah')
@@ -221,18 +230,27 @@
                                             text | {{ $item->judul }}
                                         </option>
                                     @endforeach
-
-
+                                    <option value="Kalender" {{ $halaman->atas_kanan == 'Kalender' ? 'selected' : '' }}>
+                                        Kalender
+                                    </option>
                                     <option value="Kontak" {{ $halaman->atas_kanan == 'Kontak' ? 'selected' : '' }}>
                                         Kontak
                                     </option>
-                                    <option value="Kalender Widget"
-                                        {{ $halaman->atas_kanan == 'Kalender Widget' ? 'selected' : '' }}>
-                                        Kalender Widget
-                                    </option>
-                                    {{-- <option value="Artikel" {{ $halaman->atas_kanan == 'Artikel' ? 'selected' : '' }}>
+                                    @foreach ($kategoriKontenEbook as $dataKategoriKontenEbook)
+                                        <option value="{{ $dataKategoriKontenEbook->id }},ebook"
+                                            {{ $halaman->atas_kanan == $dataKategoriKontenEbook->id . ',ebook' ? 'selected' : '' }}>
+                                            E-book | {{ $dataKategoriKontenEbook->nama }}
+                                        </option>
+                                    @endforeach
+                                    @foreach ($kategoriKonten as $dataKategoriKonten)
+                                        <option value="{{ $dataKategoriKonten->id }},konten"
+                                            {{ $halaman->atas_kanan == $dataKategoriKonten->id . ',konten' ? 'selected' : '' }}>
+                                            Konten | {{ $dataKategoriKonten->nama }}
+                                        </option>
+                                    @endforeach
+                                    <option value="Artikel" {{ $halaman->atas_kanan == 'Artikel' ? 'selected' : '' }}>
                                         Artikel
-                                    </option> --}}
+                                    </option>
 
                                 </select>
                                 @error('atas_kanan')
@@ -267,12 +285,28 @@
                                             text | {{ $item->judul }}
                                         </option>
                                     @endforeach
+                                    <option value="Kalender" {{ $halaman->tengah_kiri == 'Kalender' ? 'selected' : '' }}>
+                                        Kalender
+                                    </option>
                                     <option value="Kontak" {{ $halaman->tengah_kiri == 'Kontak' ? 'selected' : '' }}>
                                         Kontak
                                     </option>
-                                    {{-- <option value="Artikel" {{ $halaman->tengah_kiri == 'Artikel' ? 'selected' : '' }}>
+                                    @foreach ($kategoriKontenEbook as $dataKategoriKontenEbook)
+                                        <option value="{{ $dataKategoriKontenEbook->id }},ebook"
+                                            {{ $halaman->tengah_kiri == $dataKategoriKontenEbook->id . ',ebook' ? 'selected' : '' }}>
+                                            E-book | {{ $dataKategoriKontenEbook->nama }}
+                                        </option>
+                                    @endforeach
+                                    @foreach ($kategoriKonten as $dataKategoriKonten)
+                                        <option value="{{ $dataKategoriKonten->id }},konten"
+                                            {{ $halaman->tengah_kiri == $dataKategoriKonten->id . ',konten' ? 'selected' : '' }}>
+                                            Konten | {{ $dataKategoriKonten->nama }}
+                                        </option>
+                                    @endforeach
+                                    <option value="Artikel" {{ $halaman->tengah_kiri == 'Artikel' ? 'selected' : '' }}>
                                         Artikel
-                                    </option> --}}
+                                    </option>
+
                                 </select>
                                 @error('tengah_kiri')
                                     <span class="invalid-feedback" role="alert">
@@ -285,23 +319,26 @@
                             <label>Tengah</label>
                             <div class="input-group ">
 
-                                <select name="tengah" required
+                                <select name="atas_tengah" required
                                     class="form-control form-control
                                 theSelect"
-                                    @error('tengah') is-invalid @enderror>
+                                    @error('atas_tengah') is-invalid @enderror>
                                     <option value="Tidak" {{ $halaman->tengah == 'Tidak' ? 'selected' : '' }}>Tidak
                                         Ditampilkan</option>
                                     <option value="Slide" {{ $halaman->tengah == 'Slide' ? 'selected' : '' }}>Slide
                                     </option>
-                                    <option value="Galeri" {{ $halaman->tengah == 'Galeri' ? 'selected' : '' }}>Galeri
+                                    <option value="Galeri" {{ $halaman->tengah == 'Galeri' ? 'selected' : '' }}>
+                                        Galeri
                                     </option>
                                     @foreach ($text as $item)
-                                    <option value="{{ $item->id }},text"
-                                        {{ $halaman->tengah == $item->id . ',text' ? 'selected' : '' }}>
-                                        text | {{ $item->judul }}
+                                        <option value="{{ $item->id }},text"
+                                            {{ $halaman->tengah == $item->id . ',text' ? 'selected' : '' }}>
+                                            text | {{ $item->judul }}
+                                        </option>
+                                    @endforeach
+                                    <option value="Kalender" {{ $halaman->tengah == 'Kalender' ? 'selected' : '' }}>
+                                        Kalender
                                     </option>
-                                @endforeach
-
                                     <option value="Kontak" {{ $halaman->tengah == 'Kontak' ? 'selected' : '' }}>
                                         Kontak
                                     </option>
@@ -317,12 +354,9 @@
                                             Konten | {{ $dataKategoriKonten->nama }}
                                         </option>
                                     @endforeach
-                                    <option value="Kalender" {{ $halaman->tengah == 'Kalender' ? 'selected' : '' }}>
-                                        Kalender
-                                    </option>
-                                    {{-- <option value="Artikel" {{ $halaman->tengah == 'Artikel' ? 'selected' : '' }}>
+                                    <option value="Artikel" {{ $halaman->tengah == 'Artikel' ? 'selected' : '' }}>
                                         Artikel
-                                    </option> --}}
+                                    </option>
 
                                 </select>
                                 @error('tengah')
@@ -348,18 +382,32 @@
                                         Galeri
                                     </option>
                                     @foreach ($text as $item)
-                                    <option value="{{ $item->id }},text"
-                                        {{ $halaman->tengah_kanan == $item->id . ',text' ? 'selected' : '' }}>
-                                        text | {{ $item->judul }}
+                                        <option value="{{ $item->id }},text"
+                                            {{ $halaman->tengah_kanan == $item->id . ',text' ? 'selected' : '' }}>
+                                            text | {{ $item->judul }}
+                                        </option>
+                                    @endforeach
+                                    <option value="Kalender" {{ $halaman->tengah_kanan == 'Kalender' ? 'selected' : '' }}>
+                                        Kalender
                                     </option>
-                                @endforeach
-
                                     <option value="Kontak" {{ $halaman->tengah_kanan == 'Kontak' ? 'selected' : '' }}>
                                         Kontak
                                     </option>
-                                    {{-- <option value="Artikel" {{ $halaman->tengah_kanan == 'Artikel' ? 'selected' : '' }}>
+                                    @foreach ($kategoriKontenEbook as $dataKategoriKontenEbook)
+                                        <option value="{{ $dataKategoriKontenEbook->id }},ebook"
+                                            {{ $halaman->tengah_kanan == $dataKategoriKontenEbook->id . ',ebook' ? 'selected' : '' }}>
+                                            E-book | {{ $dataKategoriKontenEbook->nama }}
+                                        </option>
+                                    @endforeach
+                                    @foreach ($kategoriKonten as $dataKategoriKonten)
+                                        <option value="{{ $dataKategoriKonten->id }},konten"
+                                            {{ $halaman->tengah_kanan == $dataKategoriKonten->id . ',konten' ? 'selected' : '' }}>
+                                            Konten | {{ $dataKategoriKonten->nama }}
+                                        </option>
+                                    @endforeach
+                                    <option value="Artikel" {{ $halaman->tengah_kanan == 'Artikel' ? 'selected' : '' }}>
                                         Artikel
-                                    </option> --}}
+                                    </option>
 
                                 </select>
                                 @error('tengah_kanan')
@@ -389,19 +437,33 @@
                                         Galeri
                                     </option>
                                     @foreach ($text as $item)
-                                    <option value="{{ $item->id }},text"
-                                        {{ $halaman->bawah_kiri == $item->id . ',text' ? 'selected' : '' }}>
-                                        text | {{ $item->judul }}
+                                        <option value="{{ $item->id }},text"
+                                            {{ $halaman->bawah_kiri == $item->id . ',text' ? 'selected' : '' }}>
+                                            text | {{ $item->judul }}
+                                        </option>
+                                    @endforeach
+                                    <option value="Kalender" {{ $halaman->bawah_kiri == 'Kalender' ? 'selected' : '' }}>
+                                        Kalender
                                     </option>
-                                @endforeach
-
                                     <option value="Kontak" {{ $halaman->bawah_kiri == 'Kontak' ? 'selected' : '' }}>
                                         Kontak
                                     </option>
-
-                                    {{-- <option value="Artikel" {{ $halaman->bawah_kiri == 'Artikel' ? 'selected' : '' }}>
+                                    @foreach ($kategoriKontenEbook as $dataKategoriKontenEbook)
+                                        <option value="{{ $dataKategoriKontenEbook->id }},ebook"
+                                            {{ $halaman->bawah_kiri == $dataKategoriKontenEbook->id . ',ebook' ? 'selected' : '' }}>
+                                            E-book | {{ $dataKategoriKontenEbook->nama }}
+                                        </option>
+                                    @endforeach
+                                    @foreach ($kategoriKonten as $dataKategoriKonten)
+                                        <option value="{{ $dataKategoriKonten->id }},konten"
+                                            {{ $halaman->bawah_kiri == $dataKategoriKonten->id . ',konten' ? 'selected' : '' }}>
+                                            Konten | {{ $dataKategoriKonten->nama }}
+                                        </option>
+                                    @endforeach
+                                    <option value="Artikel" {{ $halaman->bawah_kiri == 'Artikel' ? 'selected' : '' }}>
                                         Artikel
-                                    </option> --}}
+                                    </option>
+
                                 </select>
                                 @error('bawah_kiri')
                                     <span class="invalid-feedback" role="alert">
@@ -428,12 +490,13 @@
                                         Galeri
                                     </option>
                                     @foreach ($text as $item)
-                                    <option value="{{ $item->id }},text"
-                                        {{ $halaman->bawah_tengah == $item->id . ',text' ? 'selected' : '' }}>
-                                        text | {{ $item->judul }}
-                                    </option>
-                                @endforeach
-                                    <option value="Kalender" {{ $halaman->bawah_tengah == 'Kalender' ? 'selected' : '' }}>
+                                        <option value="{{ $item->id }},text"
+                                            {{ $halaman->bawah_tengah == $item->id . ',text' ? 'selected' : '' }}>
+                                            text | {{ $item->judul }}
+                                        </option>
+                                    @endforeach
+                                    <option value="Kalender"
+                                        {{ $halaman->bawah_tengah == 'Kalender' ? 'selected' : '' }}>
                                         Kalender
                                     </option>
                                     <option value="Kontak" {{ $halaman->bawah_tengah == 'Kontak' ? 'selected' : '' }}>
@@ -451,9 +514,9 @@
                                             Konten | {{ $dataKategoriKonten->nama }}
                                         </option>
                                     @endforeach
-                                    {{-- <option value="Artikel" {{ $halaman->bawah_tengah == 'Artikel' ? 'selected' : '' }}>
+                                    <option value="Artikel" {{ $halaman->bawah_tengah == 'Artikel' ? 'selected' : '' }}>
                                         Artikel
-                                    </option> --}}
+                                    </option>
 
                                 </select>
                                 @error('bawah_tengah')
@@ -479,18 +542,32 @@
                                         Galeri
                                     </option>
                                     @foreach ($text as $item)
-                                    <option value="{{ $item->id }},text"
-                                        {{ $halaman->bawah_kanan == $item->id . ',text' ? 'selected' : '' }}>
-                                        text | {{ $item->judul }}
+                                        <option value="{{ $item->id }},text"
+                                            {{ $halaman->bawah_kanan == $item->id . ',text' ? 'selected' : '' }}>
+                                            text | {{ $item->judul }}
+                                        </option>
+                                    @endforeach
+                                    <option value="Kalender" {{ $halaman->bawah_kanan == 'Kalender' ? 'selected' : '' }}>
+                                        Kalender
                                     </option>
-                                @endforeach
-
                                     <option value="Kontak" {{ $halaman->bawah_kanan == 'Kontak' ? 'selected' : '' }}>
                                         Kontak
                                     </option>
-                                    {{-- <option value="Artikel" {{ $halaman->bawah_kanan == 'Artikel' ? 'selected' : '' }}>
+                                    @foreach ($kategoriKontenEbook as $dataKategoriKontenEbook)
+                                        <option value="{{ $dataKategoriKontenEbook->id }},ebook"
+                                            {{ $halaman->bawah_kanan == $dataKategoriKontenEbook->id . ',ebook' ? 'selected' : '' }}>
+                                            E-book | {{ $dataKategoriKontenEbook->nama }}
+                                        </option>
+                                    @endforeach
+                                    @foreach ($kategoriKonten as $dataKategoriKonten)
+                                        <option value="{{ $dataKategoriKonten->id }},konten"
+                                            {{ $halaman->bawah_kanan == $dataKategoriKonten->id . ',konten' ? 'selected' : '' }}>
+                                            Konten | {{ $dataKategoriKonten->nama }}
+                                        </option>
+                                    @endforeach
+                                    <option value="Artikel" {{ $halaman->bawah_kanan == 'Artikel' ? 'selected' : '' }}>
                                         Artikel
-                                    </option> --}}
+                                    </option>
 
                                 </select>
                                 @error('bawah_kanan')

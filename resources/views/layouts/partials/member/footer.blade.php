@@ -15,27 +15,30 @@
     <div class="footer-top">
         <div class="container">
             <div class="row gy-4">
-            
+
                 <div class="col-sm footer-info">
                     <h3 style="color: navy"> <span>{{ $setting->judul }}</span></h3>
-                    
-                    <p>{{ $setting->alamat }}</p>
+
+                    <p>{!! $setting->alamat !!}</p>
                     @php
                         use App\Models\MediaSosial;
-                        $media = MediaSosial::orderBy('created_at','asc')->get();
+                        $media = MediaSosial::orderBy('created_at', 'asc')->get();
                     @endphp
                     <br>
                     @foreach ($media as $item)
-                       <a href="{{$item->link}}" target="_blank">
-                        <img src="{{asset('icon/'.$item->icon)}}" width="30px" alt="" srcset="">
-                       </a>
+                        <a href="{{ $item->link }}" target="_blank">
+                            <img src="{{ asset('icon/' . $item->icon) }}" width="30px" alt="" srcset="">
+                        </a>
                     @endforeach
                 </div>
 
                 <div class="col-sm footer-links">
                     <h4>Lokasi</h4>
                     <center>
-                        <iframe style="width: 400px; height: 200px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.5113554464683!2d107.7501229741071!3d-6.948846068026497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68c30c7c6fe19f%3A0xd3d3febec0610024!2sBalai%20Kawasan%20Permukiman%20dan%20Perumahan!5e0!3m2!1sid!2sid!4v1725693993980!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <iframe style="width: 400px; height: 200px;"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.5113554464683!2d107.7501229741071!3d-6.948846068026497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68c30c7c6fe19f%3A0xd3d3febec0610024!2sBalai%20Kawasan%20Permukiman%20dan%20Perumahan!5e0!3m2!1sid!2sid!4v1725693993980!5m2!1sid!2sid"
+                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </center>
                 </div>
 
@@ -56,7 +59,7 @@
                         A108 Adam Street <br>
                         New York, NY 535022<br>
                         United States <br><br> --}}
-                    <a href="/m=>kontak" class="btn btn-primary btn-sm mb-3">Kontak Kami</a>
+                    <a href="/m=>kontak" class="btn  text-white btn-sm mb-3" style="background: #374774">Kontak Kami</a>
                     <br>
                     <strong>Phone:</strong> {{ $setting->call_us }}<br>
                     <strong>Email:</strong> {{ $setting->email_us }}<br>

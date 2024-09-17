@@ -28,7 +28,7 @@ class TbSettingController extends Controller
     {
         $rules = [
             'gambar' => 'image|max:2048',
-            'judul' => 'required',
+      
         ];
 
         $message = [

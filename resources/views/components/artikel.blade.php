@@ -1,5 +1,6 @@
 @php
     use App\Models\Tb_artikel;
+    use Carbon\Carbon;
     $artikel = Tb_artikel::orderBy('created_at', 'desc')->paginate(10);
 @endphp
 <div>

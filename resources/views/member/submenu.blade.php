@@ -21,49 +21,8 @@
         }
     </style>
 @endsection
-@section('js')
-    <!-- Make sure you put this AFTER Leaflet's CSS -->
-    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
-        integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
-        crossorigin=""></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-
-    <script>
-        var map = L.map('mapid').setView([{{ config('leaflet.map_center_latitude') }},
-            {{ config('leaflet.map_center_longitude') }}
-        ], {{ config('leaflet.zoom_level') }});
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-        var markers = L.markerClusterGroup();
-
-        axios.get('{{ route('api.peta.index') }}')
-            .then(function(response) {
-                var marker = L.geoJSON(response.data, {
-                    pointToLayer: function(geoJsonPoint, latlng) {
-                        return L.marker(latlng).bindPopup(function(layer) {
-                            return layer.feature.properties.map_popup_content;
-                        });
-                    }
-                });
-                markers.addLayer(marker);
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-        map.addLayer(markers);
-
-        var theMarker;
-    </script>
-@endsection
 
 @section('content')
-    @php
-        use App\Models\Tb_kategori_konten;
-        use App\Models\Tb_artikel;
-        use Illuminate\Support\Carbon;
-    @endphp
     <style>
         .card-artikel {
             display: flex;
@@ -94,12 +53,32 @@
         }
     </style>
     <br><br><br>
-    <div class="container  mt-5" style="margin-top: 30px;">
+    @php
+        use App\Models\Tb_kategori_konten_ebook;
+        use App\Models\Tb_kategori_konten;
+        use App\Models\Tb_artikel;
+        use App\Models\Tb_ebook;
+
+        use Illuminate\Support\Carbon;
+    @endphp
+    <div class="container mt-5"><br>
+        @php
+            $atas_kiri = explode(',', $submenu->konten->halaman->atas_kiri);
+            $atas_tengah = explode(',', $submenu->konten->halaman->atas_tengah);
+            $atas_kanan = explode(',', $submenu->konten->halaman->atas_kanan);
+            $tengah_kiri = explode(',', $submenu->konten->halaman->tengah_kiri);
+            $tengah_tengah = explode(',', $submenu->konten->halaman->tengah);
+            $tengah_kanan = explode(',', $submenu->konten->halaman->tengah_kanan);
+            $bawah_kiri = explode(',', $submenu->konten->halaman->bawah_kiri);
+            $bawah_tengah = explode(',', $submenu->konten->halaman->bawah_tengah);
+            $bawah_kanan = explode(',', $submenu->konten->halaman->bawah_kanan);
+        @endphp
+        {{-- {{ $tengah_tengah }} --}}
         @if ($submenu->konten->halaman != '')
             @if ($submenu->konten->halaman->judul)
                 <header class="section-header">
                     <p class="mt-4 text-uppercase">{{ $submenu->konten->halaman->judul }}</p>
-                </header>
+                </header><br>
             @endif
             {{-- Atas --}}
             <div class="row">
@@ -115,18 +94,19 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-
-                    @elseif ($submenu->konten->halaman->atas_kiri == 'Text')
+                @elseif ($atas_kiri[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $atas_kiri[0] }}"></x-text>
                     </div>
-                    <!-- text End -->
-
-                    
                 @elseif ($submenu->konten->halaman->atas_kiri == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
+                    </div>
+                @elseif ($submenu->konten->halaman->atas_kiri == 'Artikel')
+                    <div class="col">
+                        <x-artikel></x-artikel>
                     </div>
                 @elseif ($submenu->konten->halaman->atas_kiri == 'Kalender Widget')
                     <div class="col-lg-4">
@@ -136,6 +116,7 @@
 
                 @php
                     $kategoriKonten = Tb_kategori_konten::find($submenu->konten->halaman->atas_tengah);
+                    $kategoriKontenEbook = Tb_kategori_konten_ebook::find($submenu->konten->halaman->atas_tengah);
                 @endphp
                 @if ($submenu->konten->halaman->atas_tengah == 'Slide')
                     <!-- Carousel Start -->
@@ -149,13 +130,12 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-
-                    @elseif ($submenu->konten->halaman->atas_tengah == 'Text')
+                @elseif ($atas_tengah[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $atas_tengah[0] }}"></x-text>
                     </div>
-                    <!-- text End -->
                 @elseif ($submenu->konten->halaman->atas_tengah == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
@@ -172,37 +152,76 @@
                     <div class="col">
                         <x-kalender-besar></x-kalender-besar>
                     </div>
-                @elseif (isset($kategoriKonten))
+                @elseif (isset($kategoriKonten) && explode(',', $submenu->konten->halaman->atas_tengah)[1] == 'konten')
                     <div class="col">
                         @php
                             $konten = Tb_artikel::where('id_kategori_konten', $submenu->konten->halaman->atas_tengah)
                                 ->orderBy('created_at', 'desc')
-                                ->paginate(3);
+                                ->paginate(9);
                         @endphp
                         <div class="" data-aos="fade-up">
-                            <div class="row">
-                                @foreach ($konten as $item)
-                                    <div class="col-lg-12 mt-3">
-                                        <a href="/artikel/{{ $item->kategoriArtikel->slug }}/{{ $item->slug }}">
-                                            <div class="row card-artikel">
-                                                <img src="{{ $item->gambar() }}"
-                                                    style="object-fit: cover; height: 100px; width: 150px; border-radius: 13px;"
-                                                    alt="Avatar" class="col-2">
-                                                <div class="col">
-                                                    <h3 class="list-tile__title">{{$item->judul}}</h3>
-                                                    <span class="list-tile__subtitle"
-                                                        style="">{{ Carbon::parse($item->tgl_pembuatan)->translatedFormat('D, d F Y') }}
-                                                    </span>
-                                                    <div class="text-primary">Lihat Detail</div>
+                            <div class="" data-aos="fade-up">
+                                <div class="row">
+                                    @foreach ($konten as $item)
+                                        <div class="col-lg-6 mt-3">
+                                            <a href="/artikel/{{ $item->kategoriArtikel->slug }}/{{ $item->slug }}">
+                                                <div class="row card-artikel">
+                                                    <img src="{{ $item->gambar() }}"
+                                                        style="object-fit: cover; height: 100px; width: 150px; border-radius: 13px;"
+                                                        alt="Avatar" class="col-2">
+                                                    <div class="col">
+                                                        <h3 class="list-tile__title">{!! Str::limit($item->judul, 30) !!}</h3>
+                                                        <span class="list-tile__subtitle"
+                                                            style="">{{ Carbon::parse($artikel->tgl_pembuatan)->translatedFormat('D, d F Y') }}
+                                                        </span>
+                                                        <div class="text-primary">Lihat Detail</div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                @endforeach
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                         <center>
                             {!! $konten->links() !!}
+                        </center>
+                    </div>
+                @elseif (isset($kategoriKontenEbook) && explode(',', $submenu->konten->halaman->atas_tengah)[1] == 'ebook')
+                    <h4>Buku</h4>
+                    <div class="col">
+                        @php
+                            $ebook = Tb_ebook::where('id_kategori_konten_ebook', $submenu->konten->halaman->atas_tengah)
+                                ->orderBy('created_at', 'desc')
+                                ->paginate(9);
+                        @endphp
+                        <div class="" data-aos="fade-up">
+                            <div class="" data-aos="fade-up">
+                                <div class="row">
+                                    @foreach ($ebook as $item)
+                                        <div class="col-lg-3">
+                                            <div class="card shadow border-0 mb-2">
+                                                <div class="card-body">
+                                                    <center>
+                                                        <div class=""><img src="{{ $item->gambar() }}" class="rounded"
+                                                                style="height: 200px; width: 100%; object-fit: cover;"
+                                                                alt="">
+                                                        </div>
+                                                        <br>
+                                                        <h6 class=""><b> {{ Str::limit($item->judul, 50) }} </b></h6>
+                                                        <a href="/ebook/{{ $item->kategoriEbook->nama }}/{{ $item->slug }}"
+                                                            class="readmore stretched-link mt-auto">
+                                                        </a>
+                                                    </center>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <center>
+                            {!! $ebook->links() !!}
                         </center>
                     </div>
                 @endif
@@ -217,17 +236,22 @@
                     <div class="col">
                         <x-galeri></x-galeri>
                     </div>
-                    <!-- Galeri End -->
 
-                    @elseif ($submenu->konten->halaman->atas_kanan == 'Text')
+
+                    <!-- Galeri End -->
+                @elseif ($atas_kanan[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $atas_kanan[0] }}"></x-text>
                     </div>
-                    <!-- text End -->
                 @elseif ($submenu->konten->halaman->atas_kanan == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
+                    </div>
+                @elseif ($submenu->konten->halaman->atas_kanan == 'Artikel')
+                    <div class="col">
+                        <x-artikel></x-artikel>
                     </div>
                 @elseif ($submenu->konten->halaman->atas_kanan == 'Kalender Widget')
                     <div class="col-lg-4">
@@ -237,8 +261,9 @@
             </div>
             {{-- Akhir Atas --}}
             @if ($submenu->konten->halaman->gambar != null)
-                <img class="rounded"
- style="width: 100%"                    src="{{ $submenu->konten->halaman ? $submenu->konten->halaman->gambar() : 'no_image' }}" alt="Gambar">
+                <img style="width: 100%" class="rounded"
+                    src="{{ $submenu->konten->halaman ? $submenu->konten->halaman->gambar() : 'no_image' }}"
+                    alt="Gambar">
             @endif
 
             @if ($submenu->konten->halaman->teks)
@@ -247,6 +272,11 @@
                 </div>
             @endif
             {{-- Tengah --}}
+            <hr>
+            @php
+                $kategoriKonten = Tb_kategori_konten::find($submenu->konten->halaman->tengah);
+                $kategoriKontenEbook = Tb_kategori_konten_ebook::find($submenu->konten->halaman->tengah);
+            @endphp
             <div class="row">
                 @if ($submenu->konten->halaman->tengah_kiri == 'Slide')
                     <!-- Carousel Start -->
@@ -260,21 +290,23 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                    @elseif ($submenu->konten->halaman->tengah_kiri == 'Text')
+                @elseif ($tengah_kiri[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $tengah_kiri[0] }}"></x-text>
                     </div>
-                    <!-- text End -->
+
+                    {{-- @include('components.text') --}}
                 @elseif ($submenu->konten->halaman->tengah_kiri == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
                     </div>
+                @elseif ($submenu->konten->halaman->tengah_kiri == 'Artikel')
+                    <div class="col">
+                        <x-artikel></x-artikel>
+                    </div>
                 @endif
-
-                @php
-                    $kategoriKonten = Tb_kategori_konten::find($submenu->konten->halaman->tengah);
-                @endphp
                 @if ($submenu->konten->halaman->tengah == 'Slide')
                     <!-- Carousel Start -->
                     <div class="col">
@@ -287,15 +319,11 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                    @elseif ($submenu->konten->halaman->tengah == 'Text')
+                @elseif ($tengah_tengah[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
-                    </div>
-                    <!-- text End -->
-                @elseif ($submenu->konten->halaman->tengah == 'Kontak')
-                    <div class="col">
-                        <x-kontak></x-kontak>
+                        {{-- kkk --}}
+                        <x-text id="{{ $tengah_tengah[0] }}"></x-text>
                     </div>
                 @elseif ($submenu->konten->halaman->tengah == 'Video')
                     <div class="col">
@@ -309,7 +337,7 @@
                     <div class="col">
                         <x-kalender-besar></x-kalender-besar>
                     </div>
-                @elseif (isset($kategoriKonten))
+                @elseif (isset($kategoriKonten) && explode(',', $submenu->konten->halaman->tengah)[1] == 'konten')
                     <div class="col">
                         @php
                             $konten = Tb_artikel::where('id_kategori_konten', $submenu->konten->halaman->tengah)
@@ -327,8 +355,11 @@
                                                         style="object-fit: cover; height: 100px; width: 150px; border-radius: 13px;"
                                                         alt="Avatar" class="col-2">
                                                     <div class="col">
-                                                        <h3 class="list-tile__title">{!! Str::limit($item->judul, 60) !!}</h3>
-                                                        <span class="list-tile__subtitle">{!! Str::limit($item->teks, 70) !!}</span>
+                                                        <h3 class="list-tile__title">{!! Str::limit($item->judul, 30) !!}</h3>
+                                                        <span class="list-tile__subtitle"
+                                                            style="">{{ Carbon::parse($artikel->tgl_pembuatan)->translatedFormat('D, d F Y') }}
+                                                        </span>
+                                                        <div class="text-primary">Lihat Detail</div>
                                                     </div>
                                                 </div>
                                             </a>
@@ -340,8 +371,50 @@
                         <center>
                             {!! $konten->links() !!}
                         </center>
-
-                        {{-- <x-artikel></x-artikel> --}}
+                        {{-- <x-kontak></x-kontak> --}}
+                    </div>
+                @elseif (isset($kategoriKontenEbook) && explode(',', $submenu->konten->halaman->tengah)[1] == 'ebook')
+                    <h4>Karya Ilmiah</h4>
+                    <div class="col">
+                        @php
+                            $ebook = Tb_ebook::where('id_kategori_konten_ebook', $submenu->konten->halaman->tengah)
+                                ->orderBy('created_at', 'desc')
+                                ->paginate(9);
+                        @endphp
+                        <div class="" data-aos="fade-up">
+                            <div class="" data-aos="fade-up">
+                                <div class="row">
+                                    @foreach ($ebook as $item)
+                                        <div class="col-lg-3">
+                                            <div class="card shadow border-0 mb-2">
+                                                <div class="card-body">
+                                                    <center>
+                                                        <div class=""><img src="{{ $item->gambar() }}"
+                                                                class="rounded"
+                                                                style="height: 200px; width: 100%; object-fit: cover;"
+                                                                alt="">
+                                                        </div>
+                                                        <br>
+                                                        <h6 class=""><b> {{ Str::limit($item->judul, 50) }} </b>
+                                                        </h6>
+                                                        <a href="/ebook/{{ $item->kategoriEbook->nama }}/{{ $item->slug }}"
+                                                            class="readmore stretched-link mt-auto">
+                                                        </a>
+                                                    </center>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <center>
+                            {!! $ebook->links() !!}
+                        </center>
+                    </div>
+                @elseif ($submenu->konten->halaman->tengah == 'Artikel')
+                    <div class="col">
+                        <x-artikel></x-artikel>
                     </div>
                 @endif
                 @if ($submenu->konten->halaman->tengah_kanan == 'Slide')
@@ -356,15 +429,19 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                    @elseif ($submenu->konten->halaman->tengah_kanan == 'Text')
+                @elseif ($tengah_kanan[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $tengah_kanan[0] }}"></x-text>
                     </div>
-                    <!-- text End -->
                 @elseif ($submenu->konten->halaman->tengah_kanan == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
+                    </div>
+                @elseif ($submenu->konten->halaman->tengah_kanan == 'Artikel')
+                    <div class="col">
+                        <x-artikel></x-artikel>
                     </div>
                 @endif
             </div>
@@ -383,20 +460,25 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                    @elseif ($submenu->konten->halaman->bawah_kiri == 'Text')
+                @elseif ($bawah_kiri[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $bawah_kiri[0] }}"></x-text>
                     </div>
-                    <!-- text End -->
                 @elseif ($submenu->konten->halaman->bawah_kiri == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
+                    </div>
+                @elseif ($submenu->konten->halaman->bawah_kiri == 'Artikel')
+                    <div class="col">
+                        <x-artikel></x-artikel>
                     </div>
                 @endif
 
                 @php
                     $kategoriKonten = Tb_kategori_konten::find($submenu->konten->halaman->bawah_tengah);
+                    $kategoriKontenEbook = Tb_kategori_konten_ebook::find($submenu->konten->halaman->bawah_tengah);
                 @endphp
                 @if ($submenu->konten->halaman->bawah_tengah == 'Slide')
                     <!-- Carousel Start -->
@@ -410,12 +492,12 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                    @elseif ($submenu->konten->halaman->bawah_tengah == 'Text')
+                @elseif ($bawah_tengah[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $bawah_tengah[0] }}"></x-text>
                     </div>
-                    <!-- text End -->
                 @elseif ($submenu->konten->halaman->bawah_tengah == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
@@ -432,7 +514,7 @@
                     <div class="col">
                         <x-kalender-besar></x-kalender-besar>
                     </div>
-                @elseif (isset($kategoriKonten))
+                @elseif (isset($kategoriKonten) && explode(',', $submenu->konten->halaman->bawah_tengah)[1] == 'konten')
                     <div class="col">
                         @php
                             $konten = Tb_artikel::where('id_kategori_konten', $submenu->konten->halaman->bawah_tengah)
@@ -450,8 +532,11 @@
                                                         style="object-fit: cover; height: 100px; width: 150px; border-radius: 13px;"
                                                         alt="Avatar" class="col-2">
                                                     <div class="col">
-                                                        <h3 class="list-tile__title">{!! Str::limit($item->judul, 60) !!}</h3>
-                                                        <span class="list-tile__subtitle">{!! Str::limit($item->teks, 70) !!}</span>
+                                                        <h3 class="list-tile__title">{!! Str::limit($item->judul, 30) !!}</h3>
+                                                        <span class="list-tile__subtitle"
+                                                            style="">{{ Carbon::parse($artikel->tgl_pembuatan)->translatedFormat('D, d F Y') }}
+                                                        </span>
+                                                        <div class="text-primary">Lihat Detail</div>
                                                     </div>
                                                 </div>
                                             </a>
@@ -463,8 +548,48 @@
                         <center>
                             {!! $konten->links() !!}
                         </center>
-
                         {{-- <x-artikel></x-artikel> --}}
+                    </div>
+                @elseif (isset($kategoriKontenEbook) && explode(',', $submenu->konten->halaman->bawah_tengah)[1] == 'ebook')
+                    <div class="col">
+                        @php
+                            $ebook = Tb_ebook::where(
+                                'id_kategori_konten_ebook',
+                                $submenu->konten->halaman->bawah_tengah,
+                            )
+                                ->orderBy('created_at', 'desc')
+                                ->paginate(9);
+                        @endphp
+                        <div class="" data-aos="fade-up">
+                            <div class="" data-aos="fade-up">
+                                <div class="row">
+                                    @foreach ($ebook as $item)
+                                        <div class="col-lg-3">
+                                            <div class="card shadow border-0 mb-2">
+                                                <div class="card-body">
+                                                    <center>
+                                                        <div class=""><img src="{{ $item->gambar() }}"
+                                                                class="rounded"
+                                                                style="height: 200px; width: 100%; object-fit: cover;"
+                                                                alt="">
+                                                        </div>
+                                                        <br>
+                                                        <h6 class=""><b> {{ Str::limit($item->judul, 50) }} </b>
+                                                        </h6>
+                                                        <a href="/ebook/{{ $item->kategoriEbook->nama }}/{{ $item->slug }}"
+                                                            class="readmore stretched-link mt-auto">
+                                                        </a>
+                                                    </center>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <center>
+                            {!! $ebook->links() !!}
+                        </center>
                     </div>
                 @endif
                 @if ($submenu->konten->halaman->bawah_kanan == 'Slide')
@@ -479,64 +604,37 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                    @elseif ($submenu->konten->halaman->bawah_kanan == 'Text')
+                @elseif ($bawah_kanan[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $bawah_kanan[0] }}"></x-text>
                     </div>
-                    <!-- text End -->
                 @elseif ($submenu->konten->halaman->bawah_kanan == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
                     </div>
+                @elseif ($submenu->konten->halaman->bawah_kanan == 'Artikel')
+                    <div class="col">
+                        <x-artikel></x-artikel>
+                    </div>
                 @endif
             </div>
+
             {{-- Akhir Bawah --}}
         @elseif ($submenu->konten->artikel != '')
             @if ($submenu->konten->artikel->gambar != null)
-                <img class="rounded"
- style="width: 100%"                    src="{{ $submenu->konten->artikel ? $submenu->konten->artikel->gambar() : 'no_image' }}"
+                <img style="width: 100%" class="rounded"
+                    src="{{ $submenu->konten->artikel ? $submenu->konten->artikel->gambar() : 'no_image' }}"
                     alt="Gambar">
             @endif
             <h1 class="mt-4 text-uppercase">{{ $submenu->konten->artikel->judul }}</h1>
             <div class="card border-0">
                 {!! $submenu->konten->artikel->teks !!}
             </div>
-        @elseif ($submenu->konten->kategoriArtikel != '')
-            @php
-                // use App\Models\Tb_kategori_artikel;
-                $artikel = Tb_artikel::where('id_kategori_artikel', $submenu->konten->kategoriArtikel->id)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(8);
-            @endphp
-            <h5 class="mt-4"><b> Kategori {{ $submenu->konten->kategoriArtikel->nama }}</b></h5>
-            <div class="" data-aos="fade-up">
-                <div class="" data-aos="fade-up">
-                    <div class="row">
-                        @foreach ($artikel as $item)
-                            <div class="col-lg-6 mt-3">
-                                <a href="/artikel/{{ $item->kategoriArtikel->slug }}/{{ $item->slug }}">
-                                    <div class="row card-artikel">
-                                        <img src="{{ $item->gambar() }}"
-                                            style="object-fit: cover; height: 100px; width: 150px; border-radius: 13px;"
-                                            alt="Avatar" class="col-2">
-                                        <div class="col">
-                                            <h3 class="list-tile__title">{!! Str::limit($item->judul, 60) !!}</h3>
-                                            <span class="list-tile__subtitle">{!! Str::limit($item->teks, 70) !!}</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            <center>
-                {!! $artikel->links() !!}
-            </center>
         @elseif ($submenu->konten->kegiatan != '')
             @if ($submenu->konten->kegiatan->gambar != null)
-                <img class="rounded " style="width: 100%"
+                <img style="width: 100%" class="rounded"
                     src="{{ $submenu->konten->kegiatan ? $submenu->konten->kegiatan->gambar() : 'no_image' }}"
                     alt="Gambar">
             @endif

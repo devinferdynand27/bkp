@@ -11,6 +11,13 @@
             $('#setting').DataTable();
         });
     </script>
+    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+    <script>
+        CKEDITOR.replace('ckeditor', {
+            filebrowserUploadUrl: "{{ route('upload', ['_token' => csrf_token()]) }}",
+            filebrowserUploadMethod: 'form'
+        });
+    </script>
     <script src="{{ asset('js/sweetalert2.js') }}"></script>
     <script src="{{ asset('js/delete.js') }}"></script>
 @endsection
@@ -49,7 +56,7 @@
                     <div class="nav nav-tabs mb-4">
                         <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Judul</a>
                         <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Lokasi</a>
-                        <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Media Sosial</a>
+                        {{-- <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Media Sosial</a> --}}
                     </div>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="tab-pane-1">
@@ -103,11 +110,7 @@
                                                 <input type="text" value="{{ $setting->judul }}"
                                                     placeholder="Masukkan judul" name="judul" autocomplete='off'
                                                     class="form-control @error('judul') is-invalid @enderror">
-                                                @error('judul')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
+
                                             </div>
                                         </div>
                                         <div class="form-group mt-4">
@@ -130,44 +133,49 @@
                                     <form action="/master-admin/setting/lokasi" method="POST"
                                         enctype="multipart/form-data">
                                         @csrf
-                                        <div class="form-group">
-                                            <label>Alamat</label>
-                                            <div class="input-group ">
-                                                <textarea value="{{ $setting->alamat }}" rows="4" placeholder="Masukkan alamat" name="alamat" autocomplete='off'
-                                                    class="form-control @error('alamat') is-invalid @enderror">{{ $setting->alamat }}</textarea>
-                                                @error('alamat')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Alamat</label>
+                                                    <div class="input-group ">
+                                                        <div class="forum-group mt-2">
+                                                            <textarea name="alamat" style="width: 100%" required id="ckeditor" class="form-control" cols="30" rows="10">{!! $setting->alamat !!}</textarea>
+                                                            {{-- <inut type="text" name="text_name" id="ckeditor" placeholder="Masukan Judul" class="form-control mt-2"> --}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Call Us</label>
+                                                    <div class="input-group ">
+                                                        <input type="number" value="{{ $setting->call_us }}"
+                                                            placeholder="Masukkan call_us" name="call_us" autocomplete='off'
+                                                            class="form-control @error('call_us') is-invalid @enderror">
+                                                        @error('call_us')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Email Us</label>
+                                                    <div class="input-group ">
+                                                        <input type="text" value="{{ $setting->email_us }}"
+                                                            placeholder="Masukkan email_us" name="email_us"
+                                                            autocomplete='off'
+                                                            class="form-control @error('email_us') is-invalid @enderror">
+                                                        @error('email_us')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Call Us</label>
-                                            <div class="input-group ">
-                                                <input type="number" value="{{ $setting->call_us }}"
-                                                    placeholder="Masukkan call_us" name="call_us" autocomplete='off'
-                                                    class="form-control @error('call_us') is-invalid @enderror">
-                                                @error('call_us')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Email Us</label>
-                                            <div class="input-group ">
-                                                <input type="text" value="{{ $setting->email_us }}"
-                                                    placeholder="Masukkan email_us" name="email_us" autocomplete='off'
-                                                    class="form-control @error('email_us') is-invalid @enderror">
-                                                @error('email_us')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
+
                                         <div class="form-group mt-4">
                                             <button type="submit" class="btn btn-primary">
                                                 Publish</button>
@@ -176,7 +184,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="tab-pane-3">
+                        {{-- <div class="tab-pane fade" id="tab-pane-3">
                             <div class="card">
                                 <div class="card-header">
                                     <div class="row">
@@ -228,7 +236,7 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        {{-- <div class="form-group hidden">
+                                        <div class="form-group hidden">
                                             <label>Linkedin</label>
                                             <div class="input-group ">
                                                 <input type="text" value="{{ $setting->linkedin }}"
@@ -240,7 +248,7 @@
                                                     </span>
                                                 @enderror
                                             </div>
-                                        </div> --}}
+                                        </div>
                                         <div class="form-group mt-4">
                                             <button type="submit" class="btn btn-primary">
                                                 Publish</button>
@@ -248,7 +256,7 @@
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

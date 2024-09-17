@@ -15,16 +15,17 @@ class TbMenuController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $menu = Tb_menu::orderBy('urutan', 'asc')->get();
-        $lastItem = $menu->last();
-        // return $lastItem;
-        $menuCount = Tb_menu::count();
-        $konten = Tb_konten::all();
-        // localStorage.setItem("nama", "Agus");
-        return view('admin.menu.index', compact('menu', 'lastItem','konten', 'menuCount'));
-    }
+   public function index()
+{
+    $menu = Tb_menu::orderBy('urutan', 'asc')->get();
+    $lastItem = $menu->last();
+    $minUrutan = Tb_menu::min('urutan');  // Cari urutan terkecil
+    $menuCount = Tb_menu::count();
+    $konten = Tb_konten::all();
+    
+    return view('admin.menu.index', compact('menu', 'lastItem', 'konten', 'menuCount', 'minUrutan'));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -208,6 +209,7 @@ class TbMenuController extends Controller
     public function atas($id)
     {
         $item = Tb_menu::find($id);
+
     
         if (!$item) {
             return redirect()->back()->with('error', 'Item not found.');

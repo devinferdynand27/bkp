@@ -54,8 +54,11 @@ class PublicController extends Controller
             return $post;
         }, $posts['data']);
     
+        // Ambil hanya 3 postingan terbaru
+        $processedPosts = array_slice($processedPosts, 0, 3);
+    
         $slide = Tb_slide::all();
-        
+    
         // Store visitor details
         $visitor = Tb_visitor::create([
             'ip_address' => $request->ip(),
@@ -66,15 +69,15 @@ class PublicController extends Controller
         $visitor->save();
     
         $visitors = Tb_visitor::count();
-
+    
         $year_all = KalenderKegiatan::orderBy('created_at', 'asc')->get()->pluck('waktu_kegiatan')
-        ->map(function ($date) {
-            return date('Y', strtotime($date));
-        })->unique()->values();
-     
+            ->map(function ($date) {
+                return date('Y', strtotime($date));
+            })->unique()->values();
+    
         $check_scrol = false;
-
-         if (isset($request->year)) {
+    
+        if (isset($request->year)) {
             $kalender = KalenderKegiatan::whereYear('waktu_kegiatan', $request->year)->paginate(7);
             $collect = $kalender->isEmpty() ? [] : $kalender;
             $check_scrol = true;
@@ -82,15 +85,15 @@ class PublicController extends Controller
             $collect = KalenderKegiatan::orderBy('created_at', 'asc')->paginate(7);
             $check_scrol = false;
         }
-
-        $iklan = KalenderKegiatan::orderby('created_at','asc')->first();
+    
+        $iklan = KalenderKegiatan::orderby('created_at', 'desc')->first();
         $layanan = Layanan::orderby('created_at', 'asc')->get();
-
+    
         $instagram = BaseInstagram::first();
-        
-        return view('welcome', compact('slide', 'instagram','visitors', 'layanan','collect', 'check_scrol','year_all','iklan'),['posts' => $processedPosts]);
-        
+    
+        return view('welcome', compact('slide', 'instagram','visitors', 'layanan','collect', 'check_scrol','year_all','iklan'), ['posts' => $processedPosts]);
     }
+    
 
     public function kegiatan_iklan($nama_kegiatan , $id){
         $kalender = KalenderKegiatan::where('nama_kegiatan', $nama_kegiatan)

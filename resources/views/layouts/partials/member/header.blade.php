@@ -59,7 +59,7 @@
                           @endif
                       @endif
                   @endforeach
-                  <li><a class="getstarted scrollto" href="/forum">Forum</a></li>
+                  <li><a class="getstarted scrollto" href="/forum" style="background: #F7CB4F">Forum</a></li>
               </ul>
               <i class="bi bi-list mobile-nav-toggle"></i>
           </nav><!-- .navbar -->

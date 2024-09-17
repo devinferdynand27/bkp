@@ -58,9 +58,22 @@
         use App\Models\Tb_kategori_konten;
         use App\Models\Tb_artikel;
         use App\Models\Tb_ebook;
+
         use Illuminate\Support\Carbon;
     @endphp
     <div class="container mt-5"><br>
+        @php
+            $atas_kiri = explode(',', $menu->konten->halaman->atas_kiri);
+            $atas_tengah = explode(',', $menu->konten->halaman->atas_tengah);
+            $atas_kanan = explode(',', $menu->konten->halaman->atas_kanan);
+            $tengah_kiri = explode(',', $menu->konten->halaman->tengah_kiri);
+            $tengah_tengah = explode(',', $menu->konten->halaman->tengah);
+            $tengah_kanan = explode(',', $menu->konten->halaman->tengah_kanan);
+            $bawah_kiri = explode(',', $menu->konten->halaman->bawah_kiri);
+            $bawah_tengah = explode(',', $menu->konten->halaman->bawah_tengah);
+            $bawah_kanan = explode(',', $menu->konten->halaman->bawah_kanan);
+        @endphp
+        {{-- {{ $tengah_tengah }} --}}
         @if ($menu->konten->halaman != '')
             @if ($menu->konten->halaman->judul)
                 <header class="section-header">
@@ -81,11 +94,11 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                @elseif ($menu->konten->halaman->atas_kiri == 'Text')
+                @elseif ($atas_kiri[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
                         {{-- kkk --}}
-                        @include('components.text')
+                        <x-text id="{{ $atas_kiri[0] }}"></x-text>
                     </div>
                 @elseif ($menu->konten->halaman->atas_kiri == 'Kontak')
                     <div class="col">
@@ -117,15 +130,12 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-
-                    @elseif ($menu->konten->halaman->atas_tengah == 'Text')
-                    <!-- Galeri Start -->
+                @elseif ($atas_tengah[1] == 'text')
+                    <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $atas_tengah[0] }}"></x-text>
                     </div>
-                    <!-- Galeri End -->
-
-                   
                 @elseif ($menu->konten->halaman->atas_tengah == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
@@ -226,16 +236,16 @@
                     <div class="col">
                         <x-galeri></x-galeri>
                     </div>
+
+
                     <!-- Galeri End -->
-
-                    @elseif ($menu->konten->halaman->atas_kanan == 'Text')
-                    <!-- Galeri Start -->
+                @elseif ($atas_kanan[1] == 'text')
+                    <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $atas_kanan[0] }}"></x-text>
                     </div>
-                    
-
-                    @elseif ($menu->konten->halaman->atas_kanan == 'Kontak')
+                @elseif ($menu->konten->halaman->atas_kanan == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
                     </div>
@@ -279,13 +289,12 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-
-                    @elseif ($menu->konten->halaman->tengah_kiri == 'Text')
-                    <!-- Text Start -->
+                @elseif ($tengah_kiri[1] == 'text')
+                    <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $tengah_kiri[0] }}"></x-text>
                     </div>
-                    <!-- Text End -->
 
                     {{-- @include('components.text') --}}
                 @elseif ($menu->konten->halaman->tengah_kiri == 'Kontak')
@@ -309,6 +318,12 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
+                @elseif ($tengah_tengah[1] == 'text')
+                    <!-- text Start -->
+                    <div class="col">
+                        {{-- kkk --}}
+                        <x-text id="{{ $tengah_tengah[0] }}"></x-text>
+                    </div>
                 @elseif ($menu->konten->halaman->tengah == 'Video')
                     <div class="col">
                         <x-video></x-video>
@@ -413,14 +428,12 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-
-                    @elseif ($menu->konten->halaman->tengah_kanan == 'Text')
+                @elseif ($tengah_kanan[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $tengah_kanan[0] }}"></x-text>
                     </div>
-
-                    
                 @elseif ($menu->konten->halaman->tengah_kanan == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
@@ -446,11 +459,11 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-
-                    @elseif ($menu->konten->halaman->bawah_kiri == 'Text')
+                @elseif ($bawah_kiri[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $bawah_kiri[0] }}"></x-text>
                     </div>
                 @elseif ($menu->konten->halaman->bawah_kiri == 'Kontak')
                     <div class="col">
@@ -478,13 +491,12 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-
-                    @elseif ($menu->konten->halaman->bawah_tengah == 'Text')
+                @elseif ($bawah_tengah[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $bawah_tengah[0] }}"></x-text>
                     </div>
-                    
                 @elseif ($menu->konten->halaman->bawah_tengah == 'Kontak')
                     <div class="col">
                         <x-kontak></x-kontak>
@@ -588,11 +600,11 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-
-                    @elseif ($menu->konten->halaman->bawah_tengah == 'Text')
+                @elseif ($bawah_kanan[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
-                        @include('components.text')
+                        {{-- kkk --}}
+                        <x-text id="{{ $bawah_kanan[0] }}"></x-text>
                     </div>
                 @elseif ($menu->konten->halaman->bawah_kanan == 'Kontak')
                     <div class="col">

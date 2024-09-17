@@ -79,7 +79,7 @@ class ModuleTextController extends Controller
     {
         $text = ModuleText::find($id);
         $text->judul = $request->judul;
-        $text->text = $request->text;
+        $text->text = $request->text_name;
         $text->save();
         session()->put('success', 'Data Berhasil Edit');
         return redirect('/master-admin/text');

@@ -6,6 +6,7 @@ use App\Models\SubForum;
 use App\Models\Forum;
 use Illuminate\Http\Request;
 use App\Rules\NoProfanity;
+use Illuminate\Support\Facades\Validator;
 
 class SubForumController extends Controller
 {
@@ -14,48 +15,10 @@ class SubForumController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function reply(Request $request)
-    {
-        $request->validate([
-            'kepada' => ['required'],
-            'nama' => ['required'],
-            'email' => ['required','email'],
-            'deskripsi' => ['required'],
-            'id_forum' => ['required'],
-        ]);
+
     
-        // Create an instance of the NoProfanity rule
-        $noProfanity = new NoProfanity();
     
-        // Check for profanity in each field
-        $fieldsWithProfanity = [];
-        if (!$noProfanity->passes('email', $request->email)) {
-            $fieldsWithProfanity[] = 'email';
-        }
-        if (!$noProfanity->passes('nama', $request->nama)) {
-            $fieldsWithProfanity[] = 'nama';
-        }
-        if (!$noProfanity->passes('deskripsi', $request->deskripsi)) {
-            $fieldsWithProfanity[] = 'deskripsi';
-        }
     
-        // If any fields contain profanity, show a warning and redirect back
-        if (!empty($fieldsWithProfanity)) {
-            return response()->json(['success' => false, 'message' => 'atribut berisi bahasa yang tidak pantas.'], 400);
-        }      
-    
-        // Save the forum comment
-        $forum = new SubForum();
-        $forum->kepada = $request->kepada;
-        $forum->name = $request->nama;
-        $forum->email = $request->email;
-        $forum->forum_id  = $request->id_forum;
-        $forum->deskripsi = $request->deskripsi;
-        $forum->save();
-    
-        // Success message
-        return response()->json(['success' => true, 'message' => 'Comment successfully posted.']);
-    }
 
     public function status_forum($id){
         $forum = SubForum::find($id);

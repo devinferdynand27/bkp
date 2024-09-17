@@ -6,19 +6,19 @@
 
     <div class="container mt-5">
         <div id="forum-item-{{ $forum->id }}" class="forum-forum">
-            <p>  Nama : {{ $forum->name }}</p>
-            <b>  Subject : {{ $forum->subject }}</b>
-            <p>Tanggal Publish : {{$forum->create_publish}}</p>
+            <p> Nama : {{ $forum->name }}</p>
+            <b> Subject : {{ $forum->subject }}</b>
+            <p>Tanggal Publish : {{ $forum->create_publish }}</p>
             <p class="mt-2"> Deskripsi : {{ $forum->comment }}</p>
-             @if ($forum->close_the_forum == 'false')
-             <div class="d-flex">
-                <button onclick="balas('{{ $forum->id }}', '{{ $forum->name }}');"
-                    class="btn btn-success float-right">Balas</button> &nbsp;&nbsp;
+            @if ($forum->close_the_forum == 'false')
+                <div class="d-flex">
+                    <button onclick="balas('{{ $forum->id }}', '{{ $forum->name }}');"
+                        class="btn btn-success float-right">Balas</button> &nbsp;&nbsp;
 
-                <a href="/forum/sub_forum/{{ $forum->id }}" class="btn btn-primary float-right">Lihat Balasan</a>
-                &nbsp;&nbsp;
-            </div>
-             @endif
+                    <a href="/forum/sub_forum/{{ $forum->id }}" class="btn btn-primary float-right">Lihat Balasan</a>
+                    &nbsp;&nbsp;
+                </div>
+            @endif
             <hr>
 
             @if ($subForum == '[]')
@@ -35,15 +35,15 @@
 
 
             @foreach ($subForum as $item)
-               @if ($item->publish == 1)
-               <div class="container ms-5 mt-2">
-                <p> Nama : {{ $item->name }}  </p>
-                <div><b> Kepada : {{ $item->kepada }}</b></div>
-                <p>Tanggal Publish : {{$item->create_publish}}</p>
-                <p class="mt-2"> Deskripsi : {{ $item->deskripsi }}</p>
-                <hr>
-            </div>
-               @endif
+                @if ($item->publish == 1)
+                    <div class="container ms-5 mt-2">
+                        <p> Nama : {{ $item->name }} </p>
+                        <div><b> Kepada : {{ $item->kepada }}</b></div>
+                        <p>Tanggal Publish : {{ $item->create_publish }}</p>
+                        <p class="mt-2"> Deskripsi : {{ $item->deskripsi }}</p>
+                        <hr>
+                    </div>
+                @endif
             @endforeach
 
 
@@ -70,6 +70,16 @@
                     <label for="" class="mb-2"><b>Masukan Deskripsi</b></label>
                     <input type="text" class="form-control" placeholder="Masukan deskripsi"
                         name="input-deskripsi-{{ $forum->id }}" required id="deskripsi-{{ $forum->id }}">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="captcha">CAPTCHA:</label>
+                    <img src="{{ url('/captcha/math') }}" alt="CAPTCHA">
+                    <br><br>
+                    <input type="text" name="captcha" id="chapcha_balas" class="form-control" required>
+                    @if ($errors->has('captcha'))
+                        <span class="text-danger">{{ $errors->first('captcha') }}</span>
+                    @endif
                 </div>
                 <button class="btn btn-primary mt-3 float-end"
                     onclick="kirim('{{ $forum->id }}', '{{ $forum->name }}')">Kirim</button>
@@ -117,7 +127,7 @@
                             </div>
                             <div class="form-group mt-3">
                                 <label for=""><b>Email</b></label>
-                                <input required type="email"  placeholder="email" name="email"
+                                <input required type="email" placeholder="email" name="email"
                                     class="form-control mt-2">
                             </div>
                             <div class="form-group mt-3">
@@ -167,15 +177,14 @@
 
         function kirim(id, name) {
             // Ambil nilai dari input
-
             var idAsInt = parseInt(id, 10);
             var kepadaValue = document.getElementById('kepada-' + name).value;
             var namaValue = document.getElementById('nama-' + id).value;
             var emailValue = document.getElementById('email-' + id).value;
             var deskripsiValue = document.getElementById('deskripsi-' + id).value;
+            var captchaValue = document.getElementById('chapcha_balas').value; // Mengambil nilai CAPTCHA
 
             // Kirim data menggunakan AJAX
-
             $.ajax({
                 url: "{{ route('forum.reply') }}",
                 type: 'POST',
@@ -185,6 +194,7 @@
                     kepada: kepadaValue,
                     nama: namaValue,
                     email: emailValue,
+                    captcha: captchaValue, // Mengirimkan nilai CAPTCHA
                     deskripsi: deskripsiValue
                 },
                 success: function(response) {
@@ -193,7 +203,6 @@
                         formToHide.style.display = 'none';
                     }
 
-                    // Optionally hide the response form if it was open
                     var balasanForm = document.getElementById('balasan-' + id);
                     if (balasanForm) {
                         balasanForm.style.display = 'none';
@@ -201,18 +210,26 @@
 
                     alert('Pesan anda berhasil di kirim :)');
                     location.reload();
-
                 },
                 error: function(xhr, status, error) {
-                    alert('Terjadi kesalahan saat menambahkan data');
+                    var response = xhr.responseJSON;
+                    var errorMessages = '';
+
+                    // Handle validation errors
+                    if (response.errors) {
+                        $.each(response.errors, function(field, messages) {
+                            errorMessages += messages.join(' ') + '\n';
+                        });
+                    }
+
+                    if (errorMessages === '') {
+                        errorMessages = 'Terjadi kesalahan saat menambahkan data';
+                    }
+
+                    alert(errorMessages);
                     console.error(xhr.responseText);
                 }
             });
-
-
-
-
-
         }
     </script>
 @endsection

@@ -2,6 +2,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('DataTables/datatables.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 @endsection
 
 @section('js')
@@ -110,20 +111,17 @@
                                         </form>
                                     </td>
                                     <td>
-                                        <form action="submenu/urutan/{{ $item->id }}/atas" method="post">
-                                            @csrf
-                                            @if ($item->urutan != 1)
-                                                <button type="submit" class="btn btn-primary btn-sm"><i
-                                                        class="fa-solid fa-arrow-up"></i></button>
-                                            @endif
-                                        </form>
-                                        <form action="submenu/urutan/{{ $item->id }}/bawah" method="post">
-                                            @csrf
-                                            @if ($item->urutan != $submenuCount)
-                                                <button type="submit" class="btn btn-info btn-sm"><i
-                                                        class="fa-solid fa-arrow-down"></i></button>
-                                            @endif
-                                        </form>
+                                        @if ($item->urutan != $minUrutan)
+                                            <!-- Jika urutan bukan yang terkecil -->
+                                            <a href="/master-admin/submenu/atas/{{ $item->id }}"
+                                                class="btn btn-info btn-sm"><i class="bi bi-arrow-up"></i></a>
+                                        @endif
+
+                                        @if ($item->urutan != $maxUrutan)
+                                            <!-- Jika urutan bukan yang terbesar -->
+                                            <a href="/master-admin/submenu/bawah/{{ $item->id }}"
+                                                class="btn btn-warning btn-sm"><i class="bi bi-arrow-down"></i></a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
