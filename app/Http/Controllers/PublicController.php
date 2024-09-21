@@ -32,51 +32,55 @@ class PublicController extends Controller
         $accessToken = BaseInstagram::find(1)->token;
         $client = new Client();
     
-        // Fetch the user's media
-        $response = $client->request('GET', 'https://graph.instagram.com/me/media', [
-            'query' => [
-                'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,children{media_url,media_type}',
-                'access_token' => $accessToken,
-            ]
-        ]);
+        $posts = []; // Inisialisasi sebagai array kosong
     
-        $posts = json_decode($response->getBody(), true);
+        try {
+            // Fetch the user's media
+            $response = $client->request('GET', 'https://graph.instagram.com/me/media', [
+                'query' => [
+                    'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,children{media_url,media_type}',
+                    'access_token' => $accessToken,
+                ]
+            ]);
     
-        // Process the media data
-        $processedPosts = array_map(function ($post) {
-            // Check if the media is a carousel
-            if ($post['media_type'] === 'CAROUSEL_ALBUM') {
-                $carouselMedia = $post['children']['data'];
-                $post['carousel_media'] = $carouselMedia;
-            } else {
-                $post['carousel_media'] = [];
-            }
-            return $post;
-        }, $posts['data']);
+            $postsData = json_decode($response->getBody(), true);
     
-        // Ambil hanya 3 postingan terbaru
-        $processedPosts = array_slice($processedPosts, 0, 3);
+            // Process the media data
+            $posts = array_map(function ($post) {
+                if ($post['media_type'] === 'CAROUSEL_ALBUM') {
+                    $carouselMedia = $post['children']['data'];
+                    $post['carousel_media'] = $carouselMedia;
+                } else {
+                    $post['carousel_media'] = [];
+                }
+                return $post;
+            }, $postsData['data']);
     
+            // Ambil hanya 3 postingan terbaru
+            $posts = array_slice($posts, 0, 3);
+    
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            // Tangani kesalahan, misalnya token tidak valid
+            $posts = []; // Tetapkan sebagai array kosong jika terjadi kesalahan
+        }
+    
+        // Ambil data lainnya
         $slide = Tb_slide::all();
-    
-        // Store visitor details
         $visitor = Tb_visitor::create([
             'ip_address' => $request->ip(),
             'browser' => $request->header('User-Agent'),
             'device' => '-',
             'platform' => '-',
         ]);
-        $visitor->save();
-    
         $visitors = Tb_visitor::count();
-    
+        
         $year_all = KalenderKegiatan::orderBy('created_at', 'asc')->get()->pluck('waktu_kegiatan')
             ->map(function ($date) {
                 return date('Y', strtotime($date));
             })->unique()->values();
     
         $check_scrol = false;
-    
+        
         if (isset($request->year)) {
             $kalender = KalenderKegiatan::whereYear('waktu_kegiatan', $request->year)->paginate(7);
             $collect = $kalender->isEmpty() ? [] : $kalender;
@@ -85,13 +89,12 @@ class PublicController extends Controller
             $collect = KalenderKegiatan::orderBy('created_at', 'asc')->paginate(7);
             $check_scrol = false;
         }
-    
+        
         $iklan = KalenderKegiatan::orderby('created_at', 'desc')->first();
         $layanan = Layanan::orderby('created_at', 'asc')->get();
-    
         $instagram = BaseInstagram::first();
-    
-        return view('welcome', compact('slide', 'instagram','visitors', 'layanan','collect', 'check_scrol','year_all','iklan'), ['posts' => $processedPosts]);
+        
+        return view('welcome', compact('slide', 'instagram','visitors', 'layanan','collect', 'check_scrol','year_all','iklan'), ['posts' => $posts]);
     }
     
 

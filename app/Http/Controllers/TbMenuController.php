@@ -70,6 +70,7 @@ class TbMenuController extends Controller
             $data;
         }
         $menuCount = Tb_menu::count();
+        return $menuCount;
         $menu = new Tb_menu();
         if ($request->id_konten != '#') {
             $menu->id_konten = $request->id_konten;
