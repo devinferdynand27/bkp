@@ -14,8 +14,8 @@
             ->unique()
             ->values();
 
-        // Retrieve categories for the dropdown
-        $kategori = KategoriKegiatan::orderBy('created_at', 'asc')->get();
+        // Retrieve categories for the dropdo   wn
+        $kategori = KategoriKegiatan::orderBy('created_at', 'desc')->get();
 
         // Get selected year and category from the request
         $selected_year = request()->get('year');
@@ -29,7 +29,7 @@
             ->when($selected_kategori, function ($query, $kategori) {
                 return $query->where('kkid', $kategori);
             })
-            ->orderBy('created_at', 'asc')
+            ->orderBy('created_at', 'desc')
             ->get();
     @endphp
 
@@ -179,10 +179,11 @@
                         </a> &nbsp;
                     @endforeach
                 </div>
+                </br>
                 <img style="width: 100%" src="{{ asset('dokumentasi_kegiatan/' . $item->dokumentasi) }}"
                     alt=""><br><b></b><br>
                 <span style="color: gray" class="mt-2">{{ $item->waktu_kegiatan }}</span>
-                <p class="mt-3">{{ $item->deskripsi }}</p>
+                <p class="mt-3">{!! $item->deskripsi !!}</p>
 
             </div>
         </div>

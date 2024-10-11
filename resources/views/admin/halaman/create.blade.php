@@ -125,6 +125,9 @@
                                     <option value="Kalender" {{ old('atas_kiri') == 'Kalender' ? 'selected' : '' }}>
                                         Kalender
                                     </option>
+                                     <option value="Kalender" {{ old('atas_kiri') == 'Kalender_kecil' ? 'selected' : '' }}>
+                                        Kalender Kecil
+                                    </option>
                                     <option value="Artikel" {{ old('atas_kiri') == 'Artikel' ? 'selected' : '' }}>
                                         Artikel
                                     </option>
@@ -183,6 +186,9 @@
                                     <option value="Kalender" {{ old('atas_tengah') == 'Kalender' ? 'selected' : '' }}>
                                         Kalender
                                     </option>
+                                     <option value="Kalender" {{ old('atas_tengah') == 'Kalender_kecil' ? 'selected' : '' }}>
+                                        Kalender Kecil
+                                    </option>
                                     <option value="Artikel" {{ old('atas_tengah') == 'Artikel' ? 'selected' : '' }}>
                                         Artikel
                                     </option>
@@ -240,6 +246,9 @@
                                     </option>
                                     <option value="Kalender" {{ old('atas_kanan') == 'Kalender' ? 'selected' : '' }}>
                                         Kalender
+                                    </option>
+                                      <option value="Kalender" {{ old('atas_kanan') == 'Kalender_kecil' ? 'selected' : '' }}>
+                                        Kalender Kecil
                                     </option>
                                     <option value="Artikel" {{ old('atas_kanan') == 'Artikel' ? 'selected' : '' }}>
                                         Artikel

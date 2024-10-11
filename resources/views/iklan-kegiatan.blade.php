@@ -18,7 +18,7 @@ use Carbon\Carbon;
         <div class="col-md-6">
              <h4>{{$kalender->nama_kegiatan}}</h4>
              <span>{{$formattedDate }}</span><br><br>
-             <p>{{$kalender->deskripsi}}</p>
+             <p>{!!$kalender->deskripsi!!}</p>
         </div>
     </div>
 </div>

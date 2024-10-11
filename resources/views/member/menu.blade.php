@@ -94,7 +94,7 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                @elseif ($atas_kiri[1] == 'text')
+                @elseif (@$atas_kiri[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
                         {{-- kkk --}}
@@ -130,7 +130,7 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                @elseif ($atas_tengah[1] == 'text')
+                @elseif (@$atas_tengah[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
                         {{-- kkk --}}
@@ -239,7 +239,7 @@
 
 
                     <!-- Galeri End -->
-                @elseif ($atas_kanan[1] == 'text')
+                @elseif (@$atas_kanan[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
                         {{-- kkk --}}
@@ -289,7 +289,7 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                @elseif ($tengah_kiri[1] == 'text')
+                @elseif (@$tengah_kiri[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
                         {{-- kkk --}}
@@ -318,7 +318,7 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                @elseif ($tengah_tengah[1] == 'text')
+                @elseif (@$tengah_tengah[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
                         {{-- kkk --}}
@@ -428,7 +428,7 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                @elseif ($tengah_kanan[1] == 'text')
+                @elseif (@$tengah_kanan[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
                         {{-- kkk --}}
@@ -459,7 +459,7 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                @elseif ($bawah_kiri[1] == 'text')
+                @elseif (@$bawah_kiri[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
                         {{-- kkk --}}
@@ -491,7 +491,7 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                @elseif ($bawah_tengah[1] == 'text')
+                @elseif (@$bawah_tengah[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
                         {{-- kkk --}}
@@ -600,7 +600,7 @@
                         <x-galeri></x-galeri>
                     </div>
                     <!-- Galeri End -->
-                @elseif ($bawah_kanan[1] == 'text')
+                @elseif (@$bawah_kanan[1] == 'text')
                     <!-- text Start -->
                     <div class="col">
                         {{-- kkk --}}

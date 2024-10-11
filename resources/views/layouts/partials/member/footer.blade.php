@@ -35,7 +35,7 @@
                 <div class="col-sm footer-links">
                     <h4>Lokasi</h4>
                     <center>
-                        <iframe style="width: 400px; height: 200px;"
+                        <iframe style="width: 100%; height: 200px;"
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.5113554464683!2d107.7501229741071!3d-6.948846068026497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68c30c7c6fe19f%3A0xd3d3febec0610024!2sBalai%20Kawasan%20Permukiman%20dan%20Perumahan!5e0!3m2!1sid!2sid!4v1725693993980!5m2!1sid!2sid"
                             width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade"></iframe>

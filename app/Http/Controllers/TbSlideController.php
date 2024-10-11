@@ -40,7 +40,6 @@ class TbSlideController extends Controller
     {
         $rules = [
             'gambar' => 'required|image|max:2048',
-            'deskripsi' => 'required'
         ];
 
         $message = [
@@ -98,7 +97,6 @@ class TbSlideController extends Controller
     {
         $rules = [
             'gambar' => 'image|max:2048',
-            'deskripsi' => 'required'
         ];
 
         $message = [

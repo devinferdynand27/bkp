@@ -22,6 +22,13 @@
             $('#galeri').DataTable();
         });
     </script>
+     <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+    <script>
+        CKEDITOR.replace('ckeditor', {
+            filebrowserUploadUrl: "{{ route('upload', ['_token' => csrf_token()]) }}",
+            filebrowserUploadMethod: 'form'
+        });
+    </script>
     <script src="{{ asset('js/sweetalert2.js') }}"></script>
     <script src="{{ asset('js/delete.js') }}"></script>
 @endsection
@@ -160,7 +167,7 @@
 
                     <div class="form-group">
                         <label for="">Deskripsi</label>
-                        <textarea name="deskripsi" class="form-control" required cols="30" rows="10">{{ $kegiatan->deskripsi }}</textarea>
+                        <textarea name="deskripsi" class="form-control" id="ckeditor"  required cols="30" rows="10">{{ $kegiatan->deskripsi }}</textarea>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary float-right">Simpan</button>

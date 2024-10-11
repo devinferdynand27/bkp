@@ -109,7 +109,7 @@
                         <label for="">Tanggal Kegiatan</label>
                         <input type="datetime-local" name="waktu_kegiatan" required class="form-control">
                     </div>
-                    <input type="text" id="checkedItemsInput" name="lkid" value='[]'>
+                    <input type="text" hidden id="checkedItemsInput" name="lkid" value='[]'>
                     <div class="form-group">
                         <label for="">Dokumentasi</label>
                         <input type="file" name="dokumentasi" required class="form-control" placeholder="Upload Image">

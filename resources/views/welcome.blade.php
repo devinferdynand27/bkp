@@ -169,7 +169,7 @@
         }
 
         .gradient-btn {
-            background: linear-gradient(#F7CB4F, #374774);
+            background: #374774;
             border: none;
             color: white;
             padding: 10px 20px;
@@ -180,10 +180,6 @@
             font-size: 16px;
             transition: background 0.3s ease-in-out;
             border-radius: 25px;
-        }
-
-        .gradient-btn:hover {
-            background: linear-gradient(#F7CB4F, #374774);
         }
 
         .whatsapp-float {
@@ -305,7 +301,7 @@
             background-color: rgba(0, 0, 0, 0.5);
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 1050; /* Higher z-index to ensure it is on top */
             /* Ensures modal is on top of other content */
         }
 

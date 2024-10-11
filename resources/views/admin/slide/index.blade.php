@@ -145,7 +145,7 @@
                                                                 placeholder="Masukkan Deskripsi Slide" name="deskripsi"
                                                                 autocomplete='off'
                                                                 class="form-control @error('deskripsi') is-invalid @enderror"
-                                                                required>
+                                                                >
                                                             @error('deskripsi')
                                                                 <span class="invalid-feedback" role="alert">
                                                                     <strong>{{ $message }}</strong>
@@ -206,7 +206,7 @@
                             <div class="input-group ">
                                 <input type="text" value="{{ old('deksripsi') }}"
                                     placeholder="Masukkan Deskripsi Slide" name="deskripsi" autocomplete='off'
-                                    class="form-control @error('deskripsi') is-invalid @enderror" required>
+                                    class="form-control @error('deskripsi') is-invalid @enderror" >
                                 @error('deskripsi')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

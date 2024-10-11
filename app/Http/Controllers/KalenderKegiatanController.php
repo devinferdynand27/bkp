@@ -35,7 +35,7 @@ class KalenderKegiatanController extends Controller
 
     public function index()
     {
-        $kegiatan = KalenderKegiatan::orderBy('created_at', 'asc')->get();
+        $kegiatan = KalenderKegiatan::orderBy('created_at', 'desc')->get();
         return view('admin.kalender_kegiatan.index', compact('kegiatan'));
     }
 
