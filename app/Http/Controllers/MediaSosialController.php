@@ -14,8 +14,8 @@ class MediaSosialController extends Controller
      */
     public function index()
     {
-        $media = MediaSosial::orderBy('created_at','asc')->get();
-        return view('admin.media_sosial.index', compact('media'));   
+        $media = MediaSosial::orderBy('created_at', 'asc')->get();
+        return view('admin.media_sosial.index', compact('media'));
     }
 
     /**
@@ -34,7 +34,7 @@ class MediaSosialController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store( Request $request)
+    public function store(Request $request)
     {
         $data = new MediaSosial();
         $data->name = $request->name;
@@ -92,7 +92,7 @@ class MediaSosialController extends Controller
             $data->icon = $name;
         }
         $data->save();
-        session()->put('success', 'Data Berhasil ditambahkan');
+        session()->put('success', 'Data Berhasil Diubah');
         return redirect('/master-admin/media-sosial');
     }
 

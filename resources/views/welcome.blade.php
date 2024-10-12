@@ -37,6 +37,8 @@
             $year = $request->input('year');
             $kalender = KalenderKegiatan::whereYear('waktu_kegiatan', $year)->get();
         }
+        $selected_year = request()->get('year');
+        $selected_kkid = request()->get('kkid');
         $setting = Tb_setting::find(1);
         $tentang = Tb_tentang::find(1);
         $keuntungan = Tb_keuntungan::find(1);
@@ -291,7 +293,7 @@
         }
 
         .modal {
-            display: flex;
+            display: none;
             /* Display modal in center */
             position: fixed;
             top: 0;
@@ -301,7 +303,8 @@
             background-color: rgba(0, 0, 0, 0.5);
             justify-content: center;
             align-items: center;
-            z-index: 1050; /* Higher z-index to ensure it is on top */
+            z-index: 1050;
+            /* Higher z-index to ensure it is on top */
             /* Ensures modal is on top of other content */
         }
 
@@ -341,12 +344,14 @@
             <span class="close" id="closeModal">&times;</span>
             <h2>Kegiatan!</h2>
             <p>{{ $iklan->nama_kegiatan }}</p>
-            <img src="{{ asset('dokumentasi_kegiatan/' . $iklan->dokumentasi) }}" alt="Advertisement" class="img-fluid"
-                style="border-radius: 10px; width: 100%;">
+            <center>
+                <img src="{{ asset('dokumentasi_kegiatan/' . $iklan->dokumentasi) }}" alt="Advertisement" class="img-fluid"
+                    style="border-radius: 10px; width: 70%;">
+            </center>
             <div style="margin-top: 20px;">
                 <button class="btn btn-secondary" style="width: 45%" id="closeModalFooter">Close</button>
                 <a href="/kegiatan/{{ $iklan->nama_kegiatan }}/{{ $iklan->id }}" class="btn text-white"
-                    style="width: 45%; background: #374774">Learn More</a>
+                    style="width: 45%; background: #374774">Learn More {{ $year }}</a>
 
 
             </div>
@@ -354,11 +359,15 @@
     </div>
     <script>
         // Show modal after 1 second
-        window.onload = function() {
-            setTimeout(function() {
-                document.getElementById('adModal').style.display = 'flex';
-            }, 1000); // Adjust the delay time (in milliseconds) as needed
-        };
+        var params_year = '{{ $selected_year }}';
+        var params_kkid = '{{ $selected_kkid }}';
+        if (!params_year && !params_kkid) {
+            window.onload = function() {
+                setTimeout(function() {
+                    document.getElementById('adModal').style.display = 'flex';
+                }, 1000); // Adjust the delay time (in milliseconds) as needed
+            };
+        }
 
         // Close the modal when the user clicks on the close button
         var closeModal = document.getElementById('closeModal');
@@ -406,11 +415,6 @@
 
 
     <main id="main">
-
-
-
-
-
         <div>
             @if ($layanan)
                 <h5 class="text-center text--primary mb-4 mt-4">Layanan yang banyak diakses</h5>
@@ -420,8 +424,8 @@
                             <div class="category-logos">
                                 @foreach ($layanan as $item)
                                     <a class="category" href="{{ $item->link }}" target="_blank"
-                                        style="cursor: pointer"><img src="{{ asset('icon/' . $item->icon) }}" width="50"
-                                            height="50" style="object-fit: contain; ">
+                                        style="cursor: pointer"><img src="{{ asset('icon/' . $item->icon) }}"
+                                            width="50" height="50" style="object-fit: contain; ">
                                         <br />
                                         <span
                                             style="text-decoration: none; font-size: 13px; color: rgb(99, 98, 98)">{{ $item->name }}</span>
@@ -524,7 +528,7 @@
             }
         </style>
 
-        <div class="container">
+        <div class="container" id="kalender-besar">
             @include('components.kalender-besar')
         </div>
         <div class="container">

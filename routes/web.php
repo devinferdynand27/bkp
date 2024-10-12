@@ -85,13 +85,13 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/admin/dashboard', function () {
-     if(Auth::user()){
+    if (Auth::user()) {
         return redirect('/master-admin/dashboard');
-     }
+    }
 });
 
 Route::get('/tes', function () {
-     return view('tes_com');
+    return view('tes_com');
 });
 
 
@@ -104,7 +104,7 @@ Route::get('/instagram-create', [InstagramController::class, 'create']);
 Route::get('forum', [ForumController::class, 'forum_index_member'])->name('forum.filter');;
 Route::post('comment-post', [ForumController::class, 'comment_post']);
 
-Route::get('/captcha/math', [ForumController::class,'math']);
+Route::get('/captcha/math', [ForumController::class, 'math']);
 
 
 Route::get('/tentang-kami', [TbTentangKamiController::class, 'tentangIndex']);
@@ -223,12 +223,12 @@ Route::group(
     ['prefix' => 'master-admin', 'middleware' => ['auth', 'role:admin']],
     function () {
 
-        Route::get('kalender/status/{status}', [KalenderKegiatanController::class,'status_kalender']);
-        Route::get('kegiatan/edit/{id}', [KalenderKegiatanController::class,'edit']);
-        Route::put('kalender-kegiatan/update/{id}', [KalenderKegiatanController::class,'update']);
-      
-        Route::get('forum/status_forum/{id}', [ForumController::class,'status_forum']);
-        Route::get('sub_forum/publish/{id}', [SubForumController::class,'status_forum']);
+        Route::get('kalender/status/{status}', [KalenderKegiatanController::class, 'status_kalender']);
+        Route::get('kegiatan/edit/{id}', [KalenderKegiatanController::class, 'edit']);
+        Route::put('kalender-kegiatan/update/{id}', [KalenderKegiatanController::class, 'update']);
+
+        Route::get('forum/status_forum/{id}', [ForumController::class, 'status_forum']);
+        Route::get('sub_forum/publish/{id}', [SubForumController::class, 'status_forum']);
 
         Route::resource('link-kegiatan', LinkKegiatanController::class);
 
@@ -241,25 +241,25 @@ Route::group(
         Route::resource('kalender-kegiatan', KalenderKegiatanController::class);
 
         Route::resource('instagram', BaseInstagramController::class);
-        Route::get('setting-akun', [PublicController::class,'profile_me']);
-   
-        Route::post('profile-me-setting-post' ,[LoginAdminController::class,'profile_update']);
+        Route::get('setting-akun', [PublicController::class, 'profile_me']);
 
-        Route::get('/forum/sub-forum/{id}', [SubForumController::class,'index_master_admin']);
-        Route::delete('/sub_forum/delete/{id}', [SubForumController::class,'destroy']);
-        
+        Route::post('profile-me-setting-post', [LoginAdminController::class, 'profile_update']);
+
+        Route::get('/forum/sub-forum/{id}', [SubForumController::class, 'index_master_admin']);
+        Route::delete('/sub_forum/delete/{id}', [SubForumController::class, 'destroy']);
+
 
         Route::get('/menu/atas/{id}', [TbMenuController::class, 'atas'])->name('menu.atas');
-Route::get('/menu/bawah/{id}', [TbMenuController::class, 'bawah'])->name('menu.bawah');
+        Route::get('/menu/bawah/{id}', [TbMenuController::class, 'bawah'])->name('menu.bawah');
 
-Route::get('/submenu/atas/{id}', [TbSubMenuController::class, 'atas']);
-Route::get('/submenu/bawah/{id}', [TbSubMenuController::class, 'bawah'])->name('menu.bawah');
+        Route::get('/submenu/atas/{id}', [TbSubMenuController::class, 'atas']);
+        Route::get('/submenu/bawah/{id}', [TbSubMenuController::class, 'bawah'])->name('menu.bawah');
 
 
-        Route::get('forum', [ForumController::class,'index_master_admin']);
-        Route::delete('forum/delete/{id}', [ForumController::class,'destroy']);
-        Route::get('forum/publish/{id}',[ForumController::class, 'publish']);
-        
+        Route::get('forum', [ForumController::class, 'index_master_admin']);
+        Route::delete('forum/delete/{id}', [ForumController::class, 'destroy']);
+        Route::get('forum/publish/{id}', [ForumController::class, 'publish']);
+
         Route::get('logout', [LoginAdminController::class, 'logout']);
         Route::get('/', function () {
             return redirect('admin/dashboard');
@@ -361,6 +361,10 @@ Route::get('/submenu/bawah/{id}', [TbSubMenuController::class, 'bawah'])->name('
         Route::post('menu/{tb_menu:slug}/submenu/urutan/{id}/bawah', [
             TbSubMenuController::class,
             'bawah',
+        ]);
+        Route::get('menu/{tb_menu:slug}/submenu/refresh', [
+            TbSubMenuController::class,
+            'refresh',
         ]);
         Route::get('setting', [TbSettingController::class, 'index']);
         Route::get('setting', [TbSettingController::class, 'index']);

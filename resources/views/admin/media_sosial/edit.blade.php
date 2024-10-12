@@ -51,16 +51,18 @@
                 </div>
             </div>
             <div class="container mt-3">
-                 <form action="{{route('media-sosial.update', $media->id)}}" method="post" enctype="application/x-www-form-urlencoded">
+                <form action="{{ route('media-sosial.update', $media->id) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
                         <label for="">Media Sosial</label>
-                        <input type="text" class="form-control" value="{{$media->name}}" name="name" placeholder="masukan media sosial">
+                        <input type="text" class="form-control" value="{{ $media->name }}" name="name"
+                            placeholder="masukan media sosial">
                     </div>
                     <div class="form-group">
                         <label for="">Link Media</label>
-                        <input type="url" class="form-control" value="{{$media->link}}" name="link" placeholder="masukan link media sosial">
+                        <input type="url" class="form-control" value="{{ $media->link }}" name="link"
+                            placeholder="masukan link media sosial">
                     </div>
                     <div class="form-group">
                         <label for="">Icon Media</label>
@@ -70,7 +72,7 @@
                         {{-- <label for="">Icon Media</label> --}}
                         <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
                     </div>
-                 </form>
+                </form>
             </div>
         </div>
     </div>

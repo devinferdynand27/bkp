@@ -40,7 +40,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             {{-- Filter Form --}}
-                            <form action="{{ url()->current() }}" method="GET">
+                            <form action="{{ url()->current() . '#kalender-besar' }}" method="GET">
                                 <table style="width: 100%">
                                     <tr>
                                         <td>

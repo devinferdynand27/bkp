@@ -71,6 +71,7 @@ class TbArtikelController extends Controller
             session()->put('danger', 'Data yang anda input tidak valid, silahkan di ulang');
             return back()->withErrors($validation)->withInput();
         }
+
         $artikel = new Tb_artikel();
         $artikel->id_kategori_artikel = $request->id_kategori_artikel;
         $artikel->id_kategori_konten = $request->id_kategori_konten;
@@ -100,17 +101,17 @@ class TbArtikelController extends Controller
         // $this->dispatch($mailArtikelJob);
 
         // MailArtikelJob::dispatch($details);
-        
+
         // dispatch(new mailArtikelJob($details));
-        
+
         // $subscribe = Tb_subscribe::all();
         // foreach($subscribe as $item) {
         //          Mail::to($item->email)->send(new MailArtikel($details));
         //     };
-            
-        // $artikel->save();
-        
-        
+
+        $artikel->save();
+
+
         $konten = new Tb_konten();
         $konten->id_artikel = $artikel->id;
         $konten->type = "artikel";
@@ -125,10 +126,7 @@ class TbArtikelController extends Controller
      * @param  \App\Models\Tb_artikel  $tb_artikel
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        
-    }
+    public function show($id) {}
 
     /**
      * Show the form for editing the specified resource.

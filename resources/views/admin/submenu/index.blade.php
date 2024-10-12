@@ -60,6 +60,8 @@
                         <div class="card-title mb-2">Data Sub Menu {{ $menu->nama }}</div>
                         <a class="btn btn-primary text-white" href="submenu/create">Tambah
                             SubMenu</a>
+                        <a href="submenu/refresh" class="btn btn-secondary"><i class="bi bi-arrow-clockwise"></i> Sesuaikan
+                            urutan</a>
                     </div>
                 </div>
             </div>

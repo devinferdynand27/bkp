@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tb_video;
 use App\Models\Tb_kategori_video;
 use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class TbVideoController extends Controller
@@ -18,10 +18,10 @@ class TbVideoController extends Controller
     public function index()
     {
         $video = Tb_video::orderBy('created_at', 'desc')->get();
-        
+
         return view('admin.video.index', compact('video'));
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -60,9 +60,9 @@ class TbVideoController extends Controller
         $video = new Tb_video();
         $video->judul = $request->judul;
         $video->link = $request->link;
-        $video->id_kategori_video = $request->id_kategori_video;
-        $video->tgl_pembuatan = $request->tgl_pembuatan;
-        $video->waktu_pembuatan = $request->waktu_pembuatan;
+        // $video->id_kategori_video = $request->id_kategori_video;
+        // $video->tgl_pembuatan = $request->tgl_pembuatan;
+        // $video->waktu_pembuatan = $request->waktu_pembuatan;
         $video->slug = Str::slug($request->judul);
         $video->deskripsi = $request->deskripsi;
         $video->save();
@@ -122,9 +122,9 @@ class TbVideoController extends Controller
         $video = Tb_video::findOrFail($id);
         $video->judul = $request->judul;
         $video->link = $request->link;
-        $video->id_kategori_video = $request->id_kategori_video;
-        $video->tgl_pembuatan = $request->tgl_pembuatan;
-        $video->waktu_pembuatan = $request->waktu_pembuatan;
+        // $video->id_kategori_video = $request->id_kategori_video;
+        // $video->tgl_pembuatan = $request->tgl_pembuatan;
+        // $video->waktu_pembuatan = $request->waktu_pembuatan;
         $video->slug = Str::slug($request->judul);
         $video->deskripsi = $request->deskripsi;
         $video->save();
